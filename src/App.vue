@@ -5,7 +5,7 @@
       <router-link to="/">home</router-link>
     </li>
     <li>
-      <router-link to="/cadastrar">cadastrar</router-link>
+      <router-link to="/detalhes-time">detalhes</router-link>
     </li>
   </ul>
 

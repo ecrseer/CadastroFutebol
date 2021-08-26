@@ -22,6 +22,7 @@ import {ESTADOS} from '../const.js'
 export default {
   name: 'Formulario',
   components: {Campo, CampoDropDown, CampoText},
+  props:['entidade'],
   data() {
     return {
       editando: false,
@@ -31,7 +32,8 @@ export default {
   },
 
   computed: {
-    ...mapState(['carregando'])
+    ...mapState(['carregando']),
+    
   },
   methods: {
     async salvar() {
@@ -49,10 +51,14 @@ export default {
     }
   },
   created() {
-    this.$bus.on('editar', (time) => {
-      this.editando = time
-      this.time = {...time}
-    })
+    this.$bus.on('editarTime', (time) => { 
+        this.editando = time
+        this.time = {...time} 
+    }) 
+    
+  },
+  mounted() {
+  //  this.time=this.entidade;
   },
   unmounted() {
     this.$bus.off('editar')

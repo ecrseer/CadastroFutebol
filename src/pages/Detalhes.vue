@@ -1,13 +1,13 @@
 <template>
-  
-  <Formulario/>
+   <h2>pagina detalhes</h2>
+  <Formulario v-bind:entidade="timeSelecionado"/>
   
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Formulario from './components/Formulario.vue'
- 
+import Formulario from '../components/Formulario.vue'
+import TabelaGenerica from '../components/TabelaGenerica.vue'
 
 let timeNovo = () => {
   return {
@@ -22,9 +22,14 @@ let timeNovo = () => {
 }
 
 export default {
-  components: { Formulario},
+  components: { Formulario,TabelaGenerica},
   computed:{
-    ...mapState(['editando'])
+    ...mapState(['editando','times']),
+    
+    timeSelecionado(){
+        return this.times[0];
+    }
+     
   },
   mounted() {
     this.$store.dispatch('carregar')
