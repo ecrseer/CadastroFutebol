@@ -4,6 +4,8 @@
     <tr >
       <th v-for="(atributo,key) in lista[0]" v-bind:key="key">
         {{ key }}</th>
+        <th>{{this.listaFiltrada}}</th>
+        
 
     </tr>
     </thead>
@@ -34,6 +36,9 @@ export default {
   
   computed: {
     ...mapState(['carregando']),
+    listaFiltrada(){
+      return this.lista[0].nome;
+    }
   },
   methods: {
     ...mapActions(['apagar']),
