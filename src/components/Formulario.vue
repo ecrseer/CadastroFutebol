@@ -51,14 +51,14 @@ export default {
     }
   },
   created() {
-    this.$bus.on('editarTime', (time) => { 
+    /* this.$bus.on('editarTime', (time) => { 
         this.editando = time
         this.time = {...time} 
-    }) 
+    })  */
     
   },
   mounted() {
-  //  this.time=this.entidade;
+   this.time=this.entidade;
   },
   unmounted() {
     this.$bus.off('editar')

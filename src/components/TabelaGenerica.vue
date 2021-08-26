@@ -40,14 +40,17 @@ export default {
   methods: {
     ...mapActions(["apagar"]),
     editar(item) {
-      this.entidadeSelecionada = item;
-      this.$router.push({ path: "/detalhes-time" });
-
-      this.$bus.emit("editarTime", item);
+      
+      this.$router.push({
+        path: `/detalhes-time/${item.id}`,
+        params: { id: `${item.id}` },
+      });
+ 
     },
   },
-  unmounted() { /* gambiarra */
-    this.$bus.emit("editarTime", this.entidadeSelecionada); 
+  unmounted() {
+    /* gambiarra */
+    this.$bus.emit("editarTime", this.entidadeSelecionada);
   },
 };
 </script>

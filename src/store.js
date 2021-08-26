@@ -41,7 +41,11 @@ const store = createStore({
       commit('carregando')
 
       axios.get(`${baseUrlApi}`).then(({data}) => {
-        commit('time_carregado', data)
+        let realData = data;
+        if(baseUrlApi.indexOf('json')!=-1){
+          realData = data.times
+        }
+        commit('time_carregado', realData)
       })
     },
     async apagar({commit}, time) {

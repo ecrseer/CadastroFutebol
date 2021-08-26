@@ -5,7 +5,7 @@ import Detalhes from './pages/Detalhes.vue'
 
 const routes = [
   { path: '/', name:'home', component: Home }, 
-  { path: '/detalhes-time', name:'detalhes', component: Detalhes },/*
+  { path: '/detalhes-time/:id', name:'detalhestime', component: Detalhes },/*
   { path: '/filme/:id', name:'detalhes', component: Detalhes }, */
 ]
 

@@ -3,10 +3,7 @@
 <ul>
     <li>
       <router-link to="/">home</router-link>
-    </li>
-    <li>
-      <router-link to="/detalhes-time">detalhes</router-link>
-    </li>
+    </li> 
   </ul>
 
   <router-view></router-view>
