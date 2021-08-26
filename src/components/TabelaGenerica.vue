@@ -42,15 +42,14 @@ export default {
     editar(item) {
       
       this.$router.push({
-        path: `/detalhes-time/${item.id}`,
-        params: { id: `${item.id}` },
+        path: `/detalhes-time/${item.id}`
       });
  
     },
   },
   unmounted() {
     /* gambiarra */
-    this.$bus.emit("editarTime", this.entidadeSelecionada);
+    //this.$bus.emit("editarTime", this.entidadeSelecionada);
   },
 };
 </script>

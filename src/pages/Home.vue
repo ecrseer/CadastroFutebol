@@ -1,6 +1,4 @@
 <template>
-<router-link :to="{ name: 'detalhestime', 
-params: { id:1} }">ID1 </router-link>
   <TabelaGenerica v-bind:lista="times"/> 
 </template>
 

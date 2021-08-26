@@ -26,9 +26,9 @@ export default {
     ...mapState(["editando", "times"]),
 
     timeSelecionado() {
-      console.log(`id chegou e é ${this.$route.params.id}`)
+      console.log(`idTime chegou e é ${this.$route.params.idtime}`)
       let timeFiltrado = this.times.filter(
-        time => Number(time.id) === Number(this.$route.params.id)
+        time => Number(time.id) === Number(this.$route.params.idtime)
       )[0]
        return timeFiltrado;
       return this.times[0];
