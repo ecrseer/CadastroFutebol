@@ -1,22 +1,13 @@
 <template>
-<h1>dddf</h1>
-<ul>
-    <li>
-      <router-link to="/">home</router-link>
-    </li>
-    <li>
-      <router-link to="/cadastrar">cadastrar</router-link>
-    </li>
-  </ul>
-
-  <router-view></router-view>
-
+  
+  <Formulario/>
+  
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Formulario from './components/Formulario.vue'
-import Tabela from './Tabela.vue'
+ 
 
 let timeNovo = () => {
   return {
@@ -31,9 +22,9 @@ let timeNovo = () => {
 }
 
 export default {
-  components: {Tabela, Formulario},
+  components: { Formulario},
   computed:{
-    ...mapState(['times'])
+    ...mapState(['editando'])
   },
   mounted() {
     this.$store.dispatch('carregar')
