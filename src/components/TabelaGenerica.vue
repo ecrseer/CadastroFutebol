@@ -14,11 +14,7 @@
         </td>
         <td>
           <button class="colorido" @click="editar(item)">editar</button>
-        </td>
-        <td>
-          <span v-if="carregando">carregando</span>
-          <button v-else @click="apagar(item)">apagar</button>
-        </td>
+        </td> 
       </tr>
     </tbody>
   </table>
@@ -35,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["carregando"]),
+    //...mapState(["carregando"]),
   },
   methods: {
     ...mapActions(["apagar"]),

@@ -1,29 +1,17 @@
 <template>
   <h2>pagina detalhes</h2>
-  <Formulario v-bind:entidade="timeSelecionado" />
+  <Formulario v-bind:entidade="timeSelecionado"/>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Formulario from "../components/Formulario.vue";
-import TabelaGenerica from "../components/TabelaGenerica.vue";
-
-let timeNovo = () => {
-  return {
-    id: "INCREMENT",
-    nome: "",
-    estado: "",
-    tecnico: "",
-    torcida: "",
-    fundacao_ano: "",
-    info: "",
-  };
-};
+import Formulario from "../components/Formulario.vue"; 
+ 
 
 export default {
-  components: { Formulario, TabelaGenerica },
+  components: { Formulario },
   computed: {
-    ...mapState(["editando", "times"]),
+    ...mapState(["times"]),
 
     timeSelecionado() {
       console.log(`idTime chegou e é ${this.$route.params.idtime}`)
