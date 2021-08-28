@@ -12,7 +12,7 @@
     <CampoText tipo="texto" nome="info" v-model="time.info"></CampoText>
 
     <span v-if="carregando">carregando...</span>
-    <button v-else @click="salvar">salvar</button>
+    <button v-else @click="salvar" id="test_btnsalvar">salvar</button>
 
     <span v-if="carregando">carregando</span>
     <button v-else @click="apagar(time)">apagar</button>
@@ -24,19 +24,7 @@ import Campo from "./Campo.vue";
 import CampoDropDown from "./CampoDropDown.vue";
 import CampoText from "./CampoText.vue";
 import { ESTADOS, useSheetApi } from "../const.js";
-
-let timeNovo = () => {
-  return {
-    id: useSheetApi ? "INCREMENT" : "",
-    nome: "",
-    estado: "",
-    tecnico: "",
-    torcida: "",
-    fundacao_ano: "",
-    info: "",
-  };
-};
-
+ 
 export default {
   name: "Formulario",
   components: { Campo, CampoDropDown, CampoText },
@@ -77,6 +65,9 @@ export default {
 
         this.time = {};
       }
+      this.$router.push({
+        name:'home'
+      })
     },
     async apagar(time) {
       await this.$store.dispatch("apagarTime", time);
@@ -96,7 +87,7 @@ export default {
     if (this.entidade) {
       this.time = { ...this.entidade };
     } else {
-      this.time = timeNovo();
+      this.time = this.timenovin();
     }
   } /* ,
   unmounted() {
