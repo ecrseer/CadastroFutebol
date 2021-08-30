@@ -1,61 +1,102 @@
 <template>
-  <div>
-
-    <Campo nome="nome" v-model="time.nome"></Campo>
-    <CampoDropDown nome="estado" v-model="time.estado" :itens="ESTADOS"></CampoDropDown>
+  <div> 
+    <Campo nome="nome"  v-model="time.nome"></Campo>
+    <CampoDropDown
+      nome="estado"
+      v-model="time.estado"
+      :itens="ESTADOS"
+    ></CampoDropDown>
     <Campo nome="tecnico" v-model="time.tecnico"></Campo>
     <Campo nome="torcida" tipo="number" v-model="time.torcida"></Campo>
     <Campo nome="fundacao" tipo="number" v-model="time.fundacao_ano"></Campo>
     <CampoText tipo="texto" nome="info" v-model="time.info"></CampoText>
 
     <span v-if="carregando">carregando...</span>
-    <button v-else @click="salvar">salvar</button>
+    <button v-else @click="salvar" id="test_btnsalvar">salvar</button>
+
+    <span v-if="carregando">carregando</span>
+    <button v-else @click="apagar(time)">apagar</button>
   </div>
 </template>
 <script>
-import {mapState} from 'vuex'
-import Campo from './Campo.vue'
-import CampoDropDown from './CampoDropDown.vue'
-import CampoText from './CampoText.vue'
-import {ESTADOS} from '../const.js'
-
+import { mapGetters, mapState } from "vuex";
+import Campo from "./Campo.vue";
+import CampoDropDown from "./CampoDropDown.vue";
+import CampoText from "./CampoText.vue";
+import { ESTADOS, useSheetApi } from "../const.js";
+ 
 export default {
-  name: 'Formulario',
-  components: {Campo, CampoDropDown, CampoText},
+  name: "Formulario",
+  components: { Campo, CampoDropDown, CampoText },
+  props: ["entidade"],
   data() {
     return {
       editando: false,
       ESTADOS,
-      time: {}
-    }
+      time: {},
+    };
   },
 
   computed: {
-    ...mapState(['carregando'])
+    ...mapState(["carregando" ]),
+    ...mapGetters(['getUltimoTimeId']),
+    incrementaId(){ 
+      return this.getUltimoTimeId()
+        return `3`;
+    },
+        
+    timenovin() {
+      return {
+        id: useSheetApi ? "INCREMENT" : this.incrementaId,
+        nome: "",
+        estado: "",
+        tecnico: "",
+        torcida: "",
+        fundacao_ano: "",
+        info: "",
+      };
+    },
   },
   methods: {
     async salvar() {
-      if (this.editando) {
-        await this.$store.dispatch('editar', {
-          original: this.editando,
-          editado: this.time
-        })
-        this.editando = false
-        this.time = {}
+      if (!this.entidade) {
+        await this.$store.dispatch("criarTime", this.time);
+        this.time = this.timenovin;
       } else {
-        await this.$store.dispatch('criar', this.time)
-        this.time = {}
+        await this.$store.dispatch("editarTime", {
+          original: this.entidade,
+          editado: this.time,
+        });
+
+        this.time = {};
       }
-    }
+      this.$router.push({
+        name:'home'
+      })
+    },
+    async apagar(time) {
+      await this.$store.dispatch("apagarTime", time);
+
+      this.$router.push({
+        path: `/detalhes-time/${item.id}`,
+      });
+    },
   },
   created() {
-    this.$bus.on('editar', (time) => {
-      this.editando = time
-      this.time = {...time}
-    })
+    /* this.$bus.on('editarTime', (time) => { 
+        this.editando = time
+        this.time = {...time} 
+    })  */
   },
+  mounted() {
+    if (this.entidade) {
+      this.time = { ...this.entidade };
+    } else {
+      this.time = this.timenovin;
+    }
+  } /* ,
   unmounted() {
-    this.$bus.off('editar')
-  }
-}
+    this.$bus.off("editar");
+  }, */,
+};
 </script>

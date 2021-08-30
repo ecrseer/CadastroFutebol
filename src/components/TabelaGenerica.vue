@@ -24,21 +24,18 @@
 import { mapActions, mapState } from "vuex";
 export default {
   name: "TabelaGenerica",
-  props: ["lista"],
+  props: ["lista","entenome"],
   data: () => {
     return {
       entidadeSelecionada: {},
     };
-  },
-  computed: {
-    //...mapState(["carregando"]),
-  },
+  }, 
   methods: {
     ...mapActions(["apagar"]),
     editar(item) {
-      
+      let rotaente=this.entenome.toLowerCase();
       this.$router.push({
-        path: `/detalhes-time/${item.id}`
+        path: `/detalhes-${rotaente}/${item.id}`
       });
  
     },

@@ -1,25 +1,28 @@
 <template>
-  <h2>pagina detalhes</h2>
-  <Formulario v-bind:entidade="timeSelecionado"/>
+  <div>
+    <Formulario
+      v-bind:istimef="true"
+      v-bind:entidade="timeSelecionado"
+      v-bind:entenome="'Time'"
+    >
+    </Formulario>
+  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Formulario from "../components/Formulario.vue"; 
- 
+import Formulario from "../components/Formulario.vue";
 
 export default {
   components: { Formulario },
+
   computed: {
     ...mapState(["times"]),
-
     timeSelecionado() {
-      console.log(`idTime chegou e é ${this.$route.params.idtime}`)
       let timeFiltrado = this.times.filter(
-        time => Number(time.id) === Number(this.$route.params.idtime)
-      )[0]
-       return timeFiltrado;
-      return this.times[0];
+        (time) => Number(time.id) === Number(this.$route.params.idtime)
+      )[0];
+      return timeFiltrado;
     },
   },
   mounted() {

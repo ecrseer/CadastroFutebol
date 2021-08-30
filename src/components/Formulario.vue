@@ -1,22 +1,35 @@
 <template>
-  <div>
-    <Campo nome="nome" v-model="time.nome"></Campo>
-    <CampoDropDown
-      nome="estado"
-      v-model="time.estado"
-      :itens="ESTADOS"
-    ></CampoDropDown>
-    <Campo nome="tecnico" v-model="time.tecnico"></Campo>
-    <Campo nome="torcida" tipo="number" v-model="time.torcida"></Campo>
-    <Campo nome="fundacao" tipo="number" v-model="time.fundacao_ano"></Campo>
-    <CampoText tipo="texto" nome="info" v-model="time.info"></CampoText>
+  <form>
+    <div>
+      <section v-if="istimef">
+        <Campo nome="nome" v-model="Time.nome"></Campo>
+        <CampoDropDown
+          nome="estado"
+          v-model="Time.estado"
+          :itens="ESTADOS"
+        ></CampoDropDown>
+        <Campo nome="tecnico" v-model="Time.tecnico"></Campo>
+        <Campo nome="torcida" tipo="number" v-model="Time.torcida"></Campo>
+        <Campo
+          nome="fundacao"
+          tipo="number"
+          v-model="Time.fundacao_ano"
+        ></Campo>
+        <CampoText tipo="texto" nome="info" v-model="Time.info"></CampoText>
+      </section>
+      <section v-else>
+        <Campo nome="nome" v-model="Jogador.nome"></Campo>
+        <Campo nome="salario" v-model="Jogador.salario"></Campo>
+        <Campo nome="camisa" tipo="number" v-model="Jogador.camisa"></Campo>
+        <Campo nome="posicao" v-model="Jogador.posicao"></Campo>
+      </section>
+      <span v-if="carregando">carregando...</span>
+      <button v-else @click="salvar" id="test_btnsalvar">salvar</button>
 
-    <span v-if="carregando">carregando...</span>
-    <button v-else @click="salvar" id="test_btnsalvar">salvar</button>
-
-    <span v-if="carregando">carregando</span>
-    <button v-else @click="apagar(time)">apagar</button>
-  </div>
+      <span v-if="carregando">carregando</span>
+      <button v-else @click="apagar">apagar</button>
+    </div>
+  </form>
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
@@ -24,56 +37,75 @@ import Campo from "./Campo.vue";
 import CampoDropDown from "./CampoDropDown.vue";
 import CampoText from "./CampoText.vue";
 import { ESTADOS, useSheetApi } from "../const.js";
- 
+
 export default {
   name: "Formulario",
   components: { Campo, CampoDropDown, CampoText },
-  props: ["entidade"],
+  props: ["entidade", "istimef", "entenome"],
   data() {
     return {
       editando: false,
       ESTADOS,
-      time: {},
+      Time: {},
+      Jogador: {},
     };
   },
 
   computed: {
     ...mapState(["carregando"]),
-  },
-  methods: {
-    ...mapGetters("getUltimoId"),
-    timenovin() {
+    ...mapGetters(["getUltimoEnteId"]),
+    incrementaId() {
+      if (this.entenome === "Time") return this.getUltimoEnteId("times");
+
+      return this.getUltimoEnteId("jogadores");
+    },
+
+    ente_novin() {
+      if (this.entenome === "Time") {
+        return {
+          id: useSheetApi ? "INCREMENT" : this.incrementaId,
+          nome: "",
+          estado: "",
+          tecnico: "",
+          torcida: "",
+          fundacao_ano: "",
+          info: "",
+        };
+      }
       return {
-        id: useSheetApi ? "INCREMENT" : this.getUltimoId,
+        id: useSheetApi ? "INCREMENT" : this.incrementaId,
         nome: "",
-        estado: "",
-        tecnico: "",
-        torcida: "",
-        fundacao_ano: "",
-        info: "",
+        camisa: 0,
+        salario: "$0.0",
+        posicao: "",
       };
     },
+  },
+  methods: {
     async salvar() {
-      if (!this.entidade) {
-        await this.$store.dispatch("criarTime", this.time);
-        this.time = this.timenovin();
+      if (!this.entidade) { 
+        await this.$store.dispatch(
+          `criar${this.entenome}`,
+          this[this.entenome]
+        );
+        this[this.entenome] = this.ente_novin;
       } else {
-        await this.$store.dispatch("editarTime", {
+        await this.$store.dispatch(`editar${this.entenome}`, {
           original: this.entidade,
-          editado: this.time,
+          editado: this[this.entenome],
         });
 
-        this.time = {};
+        this[this.entenome] = {};
       }
       this.$router.push({
-        name:'home'
-      })
+        name: "home",
+      });
     },
     async apagar(time) {
-      await this.$store.dispatch("apagarTime", time);
+      await this.$store.dispatch(`apagar${this.entenome}`, this.entidade);
 
       this.$router.push({
-        path: `/detalhes-time/${item.id}`,
+        name: "home",
       });
     },
   },
@@ -85,9 +117,9 @@ export default {
   },
   mounted() {
     if (this.entidade) {
-      this.time = { ...this.entidade };
+      this[this.entenome] = { ...this.entidade };
     } else {
-      this.time = this.timenovin();
+      this[this.entenome] = this.ente_novin;
     }
   } /* ,
   unmounted() {

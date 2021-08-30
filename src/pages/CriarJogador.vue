@@ -1,6 +1,7 @@
 <template>
-  <h2>pagina Criar</h2>
-  <Formulario v-bind:istimef="true" v-bind:entenome="'Time'"/>
+  <h2>pagina crioar Jogador</h2>
+  <Formulario v-bind:istimef="false"
+  v-bind:entenome="'Jogador'"/>
 </template>
 
 <script> 

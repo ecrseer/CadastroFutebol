@@ -1,6 +1,5 @@
 <template>
-  <TabelaGenerica v-bind:lista="times"
-  v-bind:entenome="'Time'"/> 
+  <TabelaGenerica v-bind:lista="jogadores"/> 
 </template>
 
 <script>
@@ -11,7 +10,7 @@ import TabelaGenerica from '../components/TabelaGenerica.vue'
 export default {
   components: { TabelaGenerica},
   computed:{
-    ...mapState(['times'])
+    ...mapState(['jogadores'])
   },
   mounted() {
     this.$store.dispatch('carregar')

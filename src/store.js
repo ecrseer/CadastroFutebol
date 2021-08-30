@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { baseUrlApi, useSheetApi } from './const'
+import { baseUrlApi_times, useSheetApi, baseUrlApi_jogadores } from './const'
 import axios from 'axios'
 import createPersistedState from 'vuex-persistedstate'
 
@@ -11,17 +11,32 @@ const store = createStore({
   state() {  // equivalente ao data de um componente
     return {
       carregando: false,
-      times: [],
-      jogadores: []
+      times: [{
+        "id": "1",
+      }],
+      jogadores: [{
+        "id": "1",
+      }]
     }
   },
   getters: { // equivalente ao computed de um componente
-    getUltimoId(state) {
-      return function (codigo) {
-        let lastposi = arr.length-1
-        let id=state.times[lastposi].id;
-        return id+1;
+
+    getTimePorId(state, idtimeRota) {
+      let timeFiltrado = state.times.filter(
+        (time) => Number(time.id) === idtimeRota
+      )[0];
+    },
+    getUltimoEnteId(state) {
+      return function (entenome) {
+        let lastposi = state[entenome].length - 1
+        if (!entenome) {
+          return;
+        }
+        let novoid = Number(state[entenome][lastposi].id) + 2;
+        console.log(`novoid eh ${novoid}`)
+        return novoid + "";
       }
+
     }
   },
   mutations: { // altera o state
@@ -31,15 +46,22 @@ const store = createStore({
     nao_carregando(state) {
       state.carregando = false
     },
+    jogador_carregado(state, jogadoress) {
+      state.jogadores = jogadoress
+      state.carregando = false
+    },
+    jogador_criar(state, jogador) {
+      state.jogadores.push(jogador)
+      state.carregando = false
+    },
     time_carregado(state, times) {
       state.times = times
       state.carregando = false
     },
     time_apagar(state, time) {
-      let index = state.times.indexOf(time)
-      if (index >= 0) {
-        state.times.splice(index, 1)
-      }
+      //let index = state.times.indexOf(time)
+      let times_timeapagado = state.times.filter(timestate => timestate.id !== time.id)
+      state.times = times_timeapagado;
       state.carregando = false
     },
     time_editar(state, { original, editado }) {
@@ -55,33 +77,55 @@ const store = createStore({
     async carregar({ commit }) {
       commit('carregando')
       console.log(` t do array eh ${this.state.times.length}`)
-      if (this.state.times.length===0) {
-        axios.get(`${baseUrlApi}`).then(({ data }) => {
+      if (this.state.times.length < 2) {
+        axios.get(`${baseUrlApi_times}`).then(({ data }) => {
           let realData = data;
-          if (baseUrlApi.indexOf('json') != -1) {
+          if (baseUrlApi_times.indexOf('json') != -1) {
             realData = data.times
           }
           commit('time_carregado', realData)
+        })
+      }
+      if (this.state.jogadores.length < 2) {
+        axios.get(`${baseUrlApi_jogadores}`).then(({ data }) => {
+          let realData = data;
+          if (baseUrlApi_jogadores.indexOf('json') != -1) {
+            realData = data.jogadores
+          }
+          commit('jogador_carregado', realData)
         })
       }
 
       commit('nao_carregando')
 
     },
+    async criarJogador({ commit }, jogador) {
+      commit('carregando')
+      if (useSheetApi) {
+        await axios.post(
+          `${baseUrlApi_jogadores}`,
+          { data: [jogador] }
+        )
+
+      }
+      commit('jogador_criar', jogador)
+
+    },
     async apagarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
-        await axios.delete(`${baseUrlApi}/id/${time.id}`)
+        await axios.delete(`${baseUrlApi_times}/id/${time.id}`)
 
       }
       commit('time_apagar', time)
 
+
     },
     async criarTime({ commit }, time) {
       commit('carregando')
-      if (useSheetApi) {  
+      if (useSheetApi) {
         await axios.post(
-          `${baseUrlApi}`,
+          `${baseUrlApi_times}`,
           { data: [time] }
         )
 
@@ -93,7 +137,7 @@ const store = createStore({
       commit('carregando')
       if (useSheetApi) {
         await axios.put(
-          `${baseUrlApi}/id/${original.id}`,
+          `${baseUrlApi_times}/id/${original.id}`,
           { data: [editado] }
         )
 

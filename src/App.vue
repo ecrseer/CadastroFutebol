@@ -7,6 +7,12 @@
     <li>
       <router-link to="/criar-time">Criar time</router-link>
     </li> 
+    <li>
+      <router-link to="/criar-jogador">Criar jogador</router-link>
+    </li> 
+    <li>
+      <router-link :to="{'name':'listajogadores'}" >Listar jogadores</router-link>
+    </li> 
   </ul>
 
   <router-view></router-view>

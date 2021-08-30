@@ -1,0 +1,16 @@
+{
+    "jogadores":[
+        {"id":1,"nome":"Moyna","camisa":66,"salario":"$36076.88","posicao":"pricing structure"},
+        {"id":2,"nome":"Shelley","camisa":2,"salario":"$46731.22","posicao":"client-server"},
+        {"id":3,"nome":"Augie","camisa":3,"salario":"$3803.44","posicao":"paradigm"},
+        {"id":4,"nome":"Bobbe","camisa":68,"salario":"$8479.57","posicao":"real-time"},
+        {"id":5,"nome":"Tedda","camisa":94,"salario":"$35479.69","posicao":"zero tolerance"},
+        {"id":6,"nome":"Valentine","camisa":77,"salario":"$25826.24","posicao":"fault-tolerant"},
+        {"id":7,"nome":"Nona","camisa":69,"salario":"$34949.58","posicao":"well-modulated"},
+        {"id":8,"nome":"Barbe","camisa":88,"salario":"$30662.87","posicao":"intangible"},
+        {"id":9,"nome":"Alicia","camisa":33,"salario":"$30879.04","posicao":"frame"},
+        {"id":10,"nome":"Ladonna","camisa":20,"salario":"$54600.78","posicao":"moderator"},
+        {"id":11,"nome":"Maribeth","camisa":55,"salario":"$18656.78","posicao":"capacity"},
+        {"id":12,"nome":"Sofia","camisa":85,"salario":"$18692.11","posicao":"Stand-alone"}
+    ]
+}
