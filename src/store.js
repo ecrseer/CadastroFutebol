@@ -136,7 +136,10 @@ const store = createStore({
           { data: [editado] }
         )
 
-      }},
+      }
+      commit('ente_mutacao', ['editar','jogadores',{ original, editado }])
+    
+    },
     async apagarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
@@ -155,8 +158,7 @@ const store = createStore({
           { data: [time] }
         )
 
-      }
-      //ente_mutacao(state,mutacao,entenome,ente)
+      } 
       commit('ente_mutacao', ['criar','times',time])
 
     },
@@ -169,8 +171,8 @@ const store = createStore({
         )
 
       }
-
-      commit('time_editar', { original, editado })
+      commit('ente_mutacao', ['editar','times',{ original, editado }])
+      
     }
 
   },
