@@ -19,7 +19,6 @@ export default {
   computed: {
     ...mapGetters(["getEntePorId"]),
     timeSelecionado() {
-      
         return this.getEntePorId('times',this.$route.params.idtime);
     },
   },

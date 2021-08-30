@@ -5,22 +5,18 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import Formulario from "../components/Formulario.vue"; 
  
 
 export default {
   components: { Formulario },
-  computed: {
-    ...mapState(["jogadores"]),
+  computed: { 
+    ...mapGetters(['getEntePorId']),
 
-    JogadorSelecionado() {
-      console.log(`idJogador chegou e é ${this.$route.params.idJogador}`)
-      let JogadorFiltrado = this.jogadores.filter(
-        Jogador => Number(Jogador.id) === Number(this.$route.params.idJogador)
-      )[0]
-       return JogadorFiltrado; 
-    },
+    JogadorSelecionado() { 
+      return this.getEntePorId('jogadores',this.$route.params.idjogador)
+          },
   },
   mounted() {
     this.$store.dispatch("carregar");

@@ -32,9 +32,7 @@ const store = createStore({
     getUltimoEnteId(state) {
       return function (entenome) {
         let lastposi = state[entenome].length - 1
-        if (!entenome) {
-          return;
-        }
+        
         let novoid = Number(state[entenome][lastposi].id) + 2; 
         return novoid + "";
       }
@@ -72,6 +70,22 @@ const store = createStore({
     },
     time_criar(state, time) {
       state.times.push(time)
+      state.carregando = false
+    },
+    ente_mutacao(state,entenome,mutacao,ente){
+      if(mutacao==='criar'){
+        state[entenome].push(ente)
+      }
+      if(mutacao==='editar'){
+        let {original,editado} = ente
+        Object.assign(original, editado)
+      }
+      if(mutacao==='apagar'){
+        let entestate_enteapagado = state[entenome].filter(entestate => entestate.id !== ente.id)
+         state[entenome] = entestate_enteapagado;
+      }
+      
+
       state.carregando = false
     }
   },
@@ -113,6 +127,15 @@ const store = createStore({
       commit('jogador_criar', jogador)
 
     },
+    async editarJogador({ commit }, { original, editado }) {
+      commit('carregando')
+      if (useSheetApi) {
+        await axios.put(
+          `${baseUrlApi_times}/id/${original.id}`,
+          { data: [editado] }
+        )
+
+      }},
     async apagarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
