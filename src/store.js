@@ -72,8 +72,9 @@ const store = createStore({
       state.times.push(time)
       state.carregando = false
     },
-    ente_mutacao(state,entenome,mutacao,ente){
+    ente_mutacao(state,[mutacao,entenome,ente]){
       if(mutacao==='criar'){
+        console.log(`entenome${entenome}`)
         state[entenome].push(ente)
       }
       if(mutacao==='editar'){
@@ -155,7 +156,8 @@ const store = createStore({
         )
 
       }
-      commit('time_criar', time)
+      //ente_mutacao(state,mutacao,entenome,ente)
+      commit('ente_mutacao', ['criar','times',time])
 
     },
     async editarTime({ commit }, { original, editado }) {
