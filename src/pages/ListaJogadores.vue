@@ -1,5 +1,5 @@
 <template>
-  <TabelaGenerica v-bind:lista="jogadores"/> 
+  <TabelaGenerica v-bind:lista="jogadores" :entenome="'Jogador'"/> 
 </template>
 
 <script>

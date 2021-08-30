@@ -33,9 +33,9 @@ export default {
   methods: {
     ...mapActions(["apagar"]),
     editar(item) {
-      let rotaente=this.entenome.toLowerCase();
+      let rota_ente=this.entenome.toLowerCase();
       this.$router.push({
-        path: `/detalhes-${rotaente}/${item.id}`
+        path: `/detalhes-${rota_ente}/${item.id}`
       });
  
     },

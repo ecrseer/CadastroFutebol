@@ -1,8 +1,7 @@
 <template>
   <h2>Detalhes do time</h2>
-  <Formulario v-bind:entidade="timeSelecionado"
-  
-    v-bind:entenome="'Time'"/>
+  <Formulario v-bind:entidade="JogadorSelecionado"
+    v-bind:entenome="'Jogador'"/>
 </template>
 
 <script>
@@ -13,15 +12,14 @@ import Formulario from "../components/Formulario.vue";
 export default {
   components: { Formulario },
   computed: {
-    ...mapState(["times"]),
+    ...mapState(["jogadores"]),
 
-    timeSelecionado() {
-      console.log(`idTime chegou e é ${this.$route.params.idtime}`)
-      let timeFiltrado = this.times.filter(
-        time => Number(time.id) === Number(this.$route.params.idtime)
+    JogadorSelecionado() {
+      console.log(`idJogador chegou e é ${this.$route.params.idJogador}`)
+      let JogadorFiltrado = this.jogadores.filter(
+        Jogador => Number(Jogador.id) === Number(this.$route.params.idJogador)
       )[0]
-       return timeFiltrado;
-      return this.times[0];
+       return JogadorFiltrado; 
     },
   },
   mounted() {

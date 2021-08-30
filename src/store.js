@@ -21,10 +21,13 @@ const store = createStore({
   },
   getters: { // equivalente ao computed de um componente
 
-    getTimePorId(state, idtimeRota) {
-      let timeFiltrado = state.times.filter(
-        (time) => Number(time.id) === idtimeRota
-      )[0];
+    getEntePorId(state) {
+      return function(entenome,idEnte){
+        
+        let enteFiltrado = state[entenome].filter(
+            (ente) => Number(ente.id) === Number(idEnte))[0]; 
+            return enteFiltrado;
+      }
     },
     getUltimoEnteId(state) {
       return function (entenome) {
@@ -32,8 +35,7 @@ const store = createStore({
         if (!entenome) {
           return;
         }
-        let novoid = Number(state[entenome][lastposi].id) + 2;
-        console.log(`novoid eh ${novoid}`)
+        let novoid = Number(state[entenome][lastposi].id) + 2; 
         return novoid + "";
       }
 

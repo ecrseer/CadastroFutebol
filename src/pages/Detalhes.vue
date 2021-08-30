@@ -10,19 +10,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import Formulario from "../components/Formulario.vue";
 
 export default {
   components: { Formulario },
 
   computed: {
-    ...mapState(["times"]),
+    ...mapGetters(["getEntePorId"]),
     timeSelecionado() {
-      let timeFiltrado = this.times.filter(
-        (time) => Number(time.id) === Number(this.$route.params.idtime)
-      )[0];
-      return timeFiltrado;
+      
+        return this.getEntePorId('times',this.$route.params.idtime);
     },
   },
   mounted() {
