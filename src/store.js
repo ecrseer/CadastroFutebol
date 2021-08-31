@@ -99,10 +99,13 @@ const store = createStore({
     referencia_jogador_time(state){
       for (const time of state.times) {
         if(time.jogadores){
-          for (const jogador of time.jogadores) {
-            for (let statejogador of state.jogadores) {
+          for (let jogador of time.jogadores) {
+            for (const statejogador of state.jogadores) {
               if(statejogador.id===jogador.id){
-                statejogador=jogador
+                jogador={}
+                debugger;
+                jogador = statejogador;
+
               }
             }
           }
