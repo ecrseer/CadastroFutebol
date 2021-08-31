@@ -31,10 +31,9 @@ export default {
     };
   }, 
   methods: {
-    ...mapActions(["apagar"]),
+    
     editar(item) {
-      let rota_ente=this.entenome.toLowerCase();
-       this.apagar();
+      let rota_ente=this.entenome.toLowerCase(); 
       this.$router.push({
         path: `/detalhes-${rota_ente}/${item.id}`
       });

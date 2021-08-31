@@ -63,7 +63,6 @@ const store = createStore({
   },
   mutations: { // altera o state
     carregando(state) {
-      debugger;
       state.carregando = true
     },
     nao_carregando(state) {

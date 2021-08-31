@@ -3,14 +3,14 @@
   <v-container fluid>
     <v-row dense>
       <v-col>
-        <v-card>
+        <v-card v-for="Jogador in entidades" v-bind:key="Jogador">
           <v-img 
-            :src="'card.src'"
+            :src="Jogador.foto"
             class="white--text align-end"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="200px"
           >
-            <v-card-title v-text="'card.title'"></v-card-title>
+            <v-card-title v-text="Jogador.nome"></v-card-title>
           </v-img>
 
           <v-card-actions>
@@ -39,5 +39,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "ListaCards",
+  props:['entidades']
 };
 </script>

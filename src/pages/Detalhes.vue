@@ -16,7 +16,7 @@
       ></v-col>
       <v-col> 
         <h3>Jogadores que podem ser adicionados</h3>
-          <ListaCards/> 
+          <ListaCards v-bind:entidades="jogadoresDisponiveis"/> 
       </v-col>
     </v-row>
   </v-container>
@@ -32,7 +32,7 @@ export default {
   components: { Formulario, TabelaGenerica, ListaCards },
 
   computed: {
-    ...mapGetters(["getEntePorId"]),
+    ...mapGetters(["getEntePorId","getJogadoresDisponiveis"]),
 
     timeSelecionado() {
       return this.getEntePorId("times", this.$route.params.idtime);
@@ -43,6 +43,9 @@ export default {
       }
       return [{ id: "404", nome: "nulo" }];
     },
+    jogadoresDisponiveis(){
+      return this.getJogadoresDisponiveis();
+    }
   },
   mounted() {
     this.$store.dispatch("carregar");
