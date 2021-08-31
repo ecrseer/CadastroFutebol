@@ -7,7 +7,8 @@
             "tecnico": "A",
             "torcida": "43913",
             "fundacao_ano": "1949",
-            "info": "umavezflamengo"
+            "info": "umavezflamengo",
+            "jogadores":[]
         },
         {
             "id": "4",
@@ -16,7 +17,8 @@
             "tecnico": "D",
             "torcida": "23943",
             "fundacao_ano": "1999",
-            "info": "botafogobotafogo"
+            "info": "botafogobotafogo",
+            "jogadores":[]
         },
         {
             "id": "5",
@@ -25,7 +27,8 @@
             "tecnico": "nsei",
             "torcida": "3049",
             "fundacao_ano": "1988",
-            "info": "pp"
+            "info": "pp",
+            "jogadores":[]
         },
         {
             "id": "6",
@@ -34,7 +37,8 @@
             "tecnico": "A",
             "torcida": "43913",
             "fundacao_ano": "1949",
-            "info": "umavezflamengo"
+            "info": "umavezflamengo",
+            "jogadores":[]
         },
         {
             "id": "7",
@@ -43,7 +47,8 @@
             "tecnico": "D",
             "torcida": "23943",
             "fundacao_ano": "1999",
-            "info": "botafogobotafogo"
+            "info": "botafogobotafogo",
+            "jogadores":[]
         },
         {
             "id": "8",
@@ -52,11 +57,9 @@
             "tecnico": "nsei",
             "torcida": "3049",
             "fundacao_ano": "1988",
-            "info": "pp"
+            "info": "pp",
+            "jogadores":[]
         }
     ]
-    ,
-    "jogadores":[
-        
-    ]
+     
 }

@@ -54,10 +54,10 @@ export default {
       this.$store.dispatch(
       'adicionarJogadorAoTime',[this.$route.params.idtime,jogadr])
     })
-  },
+  },/* 
   mounted() {
     this.$store.dispatch("carregar");    
-  },
+  }, */
   unmounted(){
     this.$bus.off('addJogador')
   }

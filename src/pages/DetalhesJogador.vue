@@ -17,10 +17,10 @@ export default {
     JogadorSelecionado() { 
       return this.getEntePorId('jogadores',this.$route.params.idjogador)
           },
-  },
+  },/* 
   mounted() {
     this.$store.dispatch("carregar");
-  },
+  }, */
 };
 </script>
 

@@ -41,19 +41,18 @@ const store = createStore({
     getJogadoresDisponiveis(state){
       return function(){
         let jogadoresIndisponiveis= new Set()
+        
         state.times.forEach(time=>{ 
             if(time.jogadores){
                 jogadoresIndisponiveis.add(...time.jogadores)
          }
         })
-
-        console.log(jogadoresIndisponiveis)
+ 
         let jogadoresDisponiveis = new Set(state.jogadores) 
         
         for(let jogador of jogadoresIndisponiveis){
                  jogadoresDisponiveis.delete(jogador)
-        }
-        console.log(`jogadoresDisponiveis eh ${jogadoresDisponiveis}`)
+        } debugger
         let arrJogadoresDisponiveis = [...jogadoresDisponiveis]
         
         return arrJogadoresDisponiveis;
@@ -97,20 +96,26 @@ const store = createStore({
       state.carregando = false
     },
     referencia_jogador_time(state){
+      
       for (const time of state.times) {
+        
+        let idJogadoresDevemSerReferenciados=[]
         if(time.jogadores){
-          for (let jogador of time.jogadores) {
-            for (const statejogador of state.jogadores) {
-              if(statejogador.id===jogador.id){
-                jogador={}
-                debugger;
-                jogador = statejogador;
-
-              }
-            }
+          time.jogadores.forEach(jogador=>
+            idJogadoresDevemSerReferenciados.push(jogador.id))
+            
           }
+        if(idJogadoresDevemSerReferenciados>=1){
+            time.jogadores = []           
+            for (const idsJogador of idJogadoresDevemSerReferenciados) {
+            let refJogadorState = state.jogadores.filter(jogador=>jogador.id===idsJogador)[0]
+            debugger;
+            time.jogadores.push(refJogadorState)
+          }console.log(`time.jogadores agora eh ${time.jogadores}`)
         }
+
       }
+
     },
     adicionar_time_jogador(state,[idtime,jogador]){
       
@@ -141,8 +146,7 @@ const store = createStore({
   actions: { // equivalente ao methods de um componente
     async carregar({ commit }) {
       
-      commit('carregando')
-      console.log(` t do array eh ${this.state.times.length}`)
+      commit('carregando') 
       
       if (this.state.jogadores.length < 2) {
         axios.get(`${baseUrlApi_jogadores}`).then(({ data }) => {
@@ -161,9 +165,7 @@ const store = createStore({
           }
           commit('time_carregado', realData)
         })
-      }
-      commit('referencia_jogador_time')
-
+      } 
       commit('nao_carregando')
 
     },
