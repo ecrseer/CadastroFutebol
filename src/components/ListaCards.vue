@@ -16,7 +16,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn icon>
+            <v-btn icon v-on:click="()=>this.adicionarJogador(Jogador)">
               <v-icon>mdi-heart</v-icon>
             </v-btn>
 
@@ -39,6 +39,11 @@ import { mapState } from "vuex";
 
 export default {
   name: "ListaCards",
-  props:['entidades']
+  props:['entidades'],
+  methods:{
+    adicionarJogador(jogador){
+      this.$bus.emit('addJogador', jogador)
+    }
+  }
 };
 </script>

@@ -95,6 +95,11 @@ const store = createStore({
       state.times.push(time)
       state.carregando = false
     },
+    adicionar_time_jogador(state,[idtime,jogador]){
+      debugger;
+      let timeatual = state.times.filter(time=>time.id===idtime)[0]
+      timeatual.push(jogador) //time atual é um objeto nao um array
+    },
     ente_mutacao(state,[mutacao,entenome,ente]){
       if(mutacao==='criar'){
         console.log(`entenome${entenome}`)
@@ -140,6 +145,9 @@ const store = createStore({
 
       commit('nao_carregando')
 
+    },
+    async adicionarJogadorAoTime({commit},[idtime,jogador]){
+      commit('adicionar_time_jogador',[idtime,jogador])
     },
     async criarJogador({ commit }, jogador) {
       commit('carregando')

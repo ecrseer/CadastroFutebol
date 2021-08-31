@@ -49,9 +49,18 @@ export default {
       return this.getJogadoresDisponiveis();
     }
   },
-  mounted() {
-    this.$store.dispatch("carregar");
+  created(){
+    this.$bus.on('addJogador',(jogadr)=>{
+      this.$store.dispatch(
+      'adicionarJogadorAoTime',[this.$route.params.idtime,jogadr])
+    })
   },
+  mounted() {
+    this.$store.dispatch("carregar");    
+  },
+  unmounted(){
+    this.$bus.off('addJogador')
+  }
 };
 </script>
 
