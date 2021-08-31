@@ -1,5 +1,6 @@
 {
-    "jogadores":[
+    "jogadores":
+    [
         {"id":1,"nome":"Moyna","camisa":66,"salario":"$36076.88","posicao":"pricing structure"},
         {"id":2,"nome":"Shelley","camisa":2,"salario":"$46731.22","posicao":"client-server"},
         {"id":3,"nome":"Augie","camisa":3,"salario":"$3803.44","posicao":"paradigm"},

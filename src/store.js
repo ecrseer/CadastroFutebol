@@ -37,10 +37,33 @@ const store = createStore({
         return novoid + "";
       }
 
-    }
+    },
+    getJogadoresDisponiveis(state){
+      return function(){
+        let jogadoresIndisponiveis= new Set()
+        state.times.forEach(time=>{ 
+            if(time.jogadores){
+                jogadoresIndisponiveis.add(...time.jogadores)
+         }
+        })
+
+        console.log(jogadoresIndisponiveis)
+        let jogadoresDisponiveis = new Set(state.jogadores) 
+        
+        for(let jogador of jogadoresIndisponiveis){
+                 jogadoresDisponiveis.delete(jogador)
+        }
+        console.log(`jogadoresDisponiveis eh ${jogadoresDisponiveis}`)
+        let arrJogadoresDisponiveis = [...jogadoresDisponiveis]
+        return arrJogadoresDisponiveis;
+
+        }
+      }
+    
   },
   mutations: { // altera o state
     carregando(state) {
+      debugger;
       state.carregando = true
     },
     nao_carregando(state) {
@@ -55,6 +78,7 @@ const store = createStore({
       state.carregando = false
     },
     time_carregado(state, times) {
+      
       state.times = times
       state.carregando = false
     },
@@ -89,9 +113,11 @@ const store = createStore({
 
       state.carregando = false
     }
+
   },
   actions: { // equivalente ao methods de um componente
     async carregar({ commit }) {
+      
       commit('carregando')
       console.log(` t do array eh ${this.state.times.length}`)
       if (this.state.times.length < 2) {

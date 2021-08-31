@@ -1,17 +1,20 @@
 {
-  "name": "vue09",
+  "name": "gjmtp3",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
     "serve": "vite preview",
+    "build": "vite build",
+    "dev": "vite",
     "test": "npx cypress open"
   },
   "dependencies": {
+    "@mdi/font": "5.9.55",
     "axios": "^0.21.1",
     "mitt": "^3.0.0",
+    "roboto-fontface": "*",
     "vue": "^3.0.5",
     "vue-router": "4",
+    "vuetify": "^3.0.0-alpha.0",
     "vuex": "^4.0.2",
     "vuex-persistedstate": "^4.0.0"
   },
@@ -19,6 +22,8 @@
     "@vitejs/plugin-vue": "^1.3.0",
     "@vue/compiler-sfc": "^3.0.5",
     "cypress": "^7.6.0",
+    "sass": "~1.32.0",
+    "sass-loader": "^10.0.0",
     "vite": "^2.4.4",
     "vue-cli-plugin-vuetify": "~2.4.2"
   }
