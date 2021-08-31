@@ -55,6 +55,7 @@ const store = createStore({
         }
         console.log(`jogadoresDisponiveis eh ${jogadoresDisponiveis}`)
         let arrJogadoresDisponiveis = [...jogadoresDisponiveis]
+        
         return arrJogadoresDisponiveis;
 
         }
@@ -95,14 +96,29 @@ const store = createStore({
       state.times.push(time)
       state.carregando = false
     },
+    referencia_jogador_time(state){
+      for (const time of state.times) {
+        if(time.jogadores){
+          for (const jogador of time.jogadores) {
+            for (let statejogador of state.jogadores) {
+              if(statejogador.id===jogador.id){
+                statejogador=jogador
+              }
+            }
+          }
+        }
+      }
+    },
     adicionar_time_jogador(state,[idtime,jogador]){
-      debugger;
+      
       let timeatual = state.times.filter(time=>time.id===idtime)[0]
-      timeatual.push(jogador) //time atual é um objeto nao um array
+      if(!timeatual.jogadores){
+        timeatual.jogadores = []
+      }
+      timeatual.jogadores.push(jogador)
     },
     ente_mutacao(state,[mutacao,entenome,ente]){
-      if(mutacao==='criar'){
-        console.log(`entenome${entenome}`)
+      if(mutacao==='criar'){ 
         state[entenome].push(ente)
       }
       if(mutacao==='editar'){
@@ -124,15 +140,7 @@ const store = createStore({
       
       commit('carregando')
       console.log(` t do array eh ${this.state.times.length}`)
-      if (this.state.times.length < 2) {
-        axios.get(`${baseUrlApi_times}`).then(({ data }) => {
-          let realData = data;
-          if (baseUrlApi_times.indexOf('json') != -1) {
-            realData = data.times
-          }
-          commit('time_carregado', realData)
-        })
-      }
+      
       if (this.state.jogadores.length < 2) {
         axios.get(`${baseUrlApi_jogadores}`).then(({ data }) => {
           let realData = data;
@@ -142,6 +150,16 @@ const store = createStore({
           commit('jogador_carregado', realData)
         })
       }
+      if (this.state.times.length < 2) {
+        axios.get(`${baseUrlApi_times}`).then(({ data }) => {
+          let realData = data;
+          if (baseUrlApi_times.indexOf('json') != -1) {
+            realData = data.times
+          }
+          commit('time_carregado', realData)
+        })
+      }
+      commit('referencia_jogador_time')
 
       commit('nao_carregando')
 

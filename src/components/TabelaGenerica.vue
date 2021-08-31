@@ -3,18 +3,18 @@
     <thead>
       <tr>
         <th v-for="(atributo, key) in lista[0]" v-bind:key="key">
-          {{ key }}
+          <span v-if="!Array.isArray(atributo)">{{ key }}</span>
         </th>
       </tr>
     </thead>
     <tbody id="test_tabela">
       <tr v-for="item in lista" v-bind:key="item">
         <td v-for="(atributo, key) in item" v-bind:key="key">
-          {{ atributo }}
+          <span v-if="!Array.isArray(atributo)">{{atributo}}</span>
         </td>
         <td>
           <button class="colorido" @click="editar(item)">editar</button>
-        </td> 
+        </td>
       </tr>
     </tbody>
   </table>
@@ -24,20 +24,18 @@
 import { mapActions, mapState } from "vuex";
 export default {
   name: "TabelaGenerica",
-  props: ["lista","entenome"],
+  props: ["lista", "entenome"],
   data: () => {
     return {
       entidadeSelecionada: {},
     };
-  }, 
+  },
   methods: {
-    
     editar(item) {
-      let rota_ente=this.entenome.toLowerCase(); 
+      let rota_ente = this.entenome.toLowerCase();
       this.$router.push({
-        path: `/detalhes-${rota_ente}/${item.id}`
+        path: `/detalhes-${rota_ente}/${item.id}`,
       });
- 
     },
   },
   unmounted() {

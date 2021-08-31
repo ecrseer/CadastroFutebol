@@ -10,7 +10,7 @@
       </v-container>
 <v-bottom-navigation v-model="rota">
     <v-btn value="recent" v-on:click="$router.push({name:'home'})">
-      <span>Home</span>
+      <span>Listar Times</span>
       <v-icon>mdi-home</v-icon>      
     </v-btn>
 
