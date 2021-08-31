@@ -2,8 +2,8 @@
 <template>
   <v-container fluid>
     <v-row dense>
-      <v-col>
-        <v-card v-for="Jogador in entidades" v-bind:key="Jogador">
+      <v-col v-for="Jogador in entidades" v-bind:key="Jogador">
+        <v-card >
           <v-img 
             :src="Jogador.foto"
             class="white--text align-end"

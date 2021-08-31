@@ -2,26 +2,37 @@
 <template>
   <v-app>
     <v-main>
-      <h1>t</h1>
-      <ul>
-        <li>
-          <router-link to="/">home</router-link>
-        </li>
-        <li>
-          <router-link to="/criar-time">Criar time</router-link>
-        </li>
-        <li>
-          <router-link to="/criar-jogador">Criar jogador</router-link>
-        </li>
-        <li>
-          <router-link :to="{ name: 'listajogadores' }"
-            >Listar jogadores</router-link
-          >
-        </li>
-      </ul>
+      <v-container class="ma-1">
+      <router-view></router-view> 
+        
+      
+      
+      </v-container>
+<v-bottom-navigation v-model="rota">
+    <v-btn value="recent" v-on:click="$router.push({name:'home'})">
+      <span>Home</span>
+      <v-icon>mdi-home</v-icon>      
+    </v-btn>
 
-      <router-view></router-view> </v-main
-  ></v-app>
+    <v-btn value="favorites" v-on:click="$router.push({name:'criartime'})">
+      <span>Criar time</span>
+
+      <v-icon>mdi-heart</v-icon>
+    </v-btn>
+
+    <v-btn value="nearby" v-on:click="$router.push({name:'criarjogador'})">
+      <span>Criar jogador</span>
+
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+    <v-btn value="nearby" v-on:click="$router.push({name:'listajogadores'})">
+      <span>Listar jogadores</span>
+
+     <v-icon>mdi-map-marker</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
+      </v-main>
+      </v-app>
 </template>
 
 <script>
@@ -31,6 +42,9 @@ import Tabela from "./Tabela.vue";
 
 export default {
   components: { Tabela, Formulario },
+  data:()=>{
+    return{rota:''}
+  },
   computed: {
     ...mapState(["times"]),
   },

@@ -1,7 +1,8 @@
 <template>
   <v-container class="grey lighten-5">
     <v-row :class="'mb-6'" no-gutters>
-      <v-col>
+      <v-col cols="12"
+          sm="5">
         <v-card class="pa-2" outlined tile>
           <Formulario
             v-bind:istimef="true"
@@ -14,7 +15,8 @@
             :entenome="'Jogador'"
           /> </v-card
       ></v-col>
-      <v-col> 
+      <v-col  cols="12"
+          sm="7"> 
         <h3>Jogadores que podem ser adicionados</h3>
           <ListaCards v-bind:entidades="jogadoresDisponiveis"/> 
       </v-col>
