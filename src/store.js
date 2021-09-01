@@ -52,7 +52,8 @@ const store = createStore({
 
         for (let jogador of jogadoresIndisponiveis) {
           jogadoresDisponiveis.delete(jogador)
-        } debugger
+        } 
+        
         let arrJogadoresDisponiveis = [...jogadoresDisponiveis]
 
         return arrJogadoresDisponiveis;
@@ -73,6 +74,7 @@ const store = createStore({
       state.carregando = false
     },
     jogador_criar(state, [time, jogador]) {
+      debugger
       let refTimeState = state.times.find(tme => tme.id === time.id)
       if (!refTimeState.jogadores || !Array.isArray(refTimeState.jogadores)) {
         refTimeState.jogadores = []
@@ -113,7 +115,7 @@ const store = createStore({
           time.jogadores = []
           for (const idsJogador of idJogadoresDevemSerReferenciados) {
             let refJogadorState = state.jogadores.filter(jogador => jogador.id === idsJogador)[0]
-            debugger;
+             
             time.jogadores.push(refJogadorState)
           } console.log(`time.jogadores agora eh ${time.jogadores}`)
         }
@@ -185,6 +187,7 @@ const store = createStore({
         )
 
       }
+      debugger
       commit('jogador_criar', timeEjogador)
 
     },

@@ -32,7 +32,13 @@ export default {
   },
   methods: {
     editar(item) {
+      if(this.entenome==="Jogador"){
+        this.$bus.emit('editJogador',item)
+        return;
+      }
+
       let rota_ente = this.entenome.toLowerCase();
+
       this.$router.push({
         path: `/detalhes-${rota_ente}/${item.id}`,
       });
@@ -46,6 +52,6 @@ export default {
 </script>
 <style scoped>
 .colorido {
-  background-color: #d90df0;
+  background-color: #e2aee7;
 }
 </style>

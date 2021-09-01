@@ -84,11 +84,17 @@ export default {
   },
   methods: {
     async salvar() {
-//      let payLoadType= this.entenome === "Time" ? this.time : [this.time]
+      let formPayload = {
+        time:this.Time,
+        jogador:this.Jogador
+      }
+      /* if(this.entidadepai){
+        this.$bus.emit('salvarJogadorNoTime',this.Jogador)
+      } */
       if (!this.entidade) { 
         await this.$store.dispatch(
           `criar${this.entenome}`,
-          [this[this.entenome]]
+          formPayload
         );
         this[this.entenome] = this.ente_novin;
       } else {
@@ -121,6 +127,9 @@ export default {
       this[this.entenome] = { ...this.entidade };
     } else {
       this[this.entenome] = this.ente_novin;
+    }
+    if(this.entidadepai){
+      this.Time = this.entidadepai
     }
   } /* ,
   unmounted() {
