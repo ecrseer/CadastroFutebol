@@ -50,28 +50,31 @@ export default {
       Jogador: {},
     };
   },
-
   computed: {
     ...mapState(["carregando"]),
     ...mapGetters(["getUltimoEnteId"]),
     incrementaId() {
-      if (this.entenome === "Time") return this.getUltimoEnteId("times");
+      if (this.entenome === "Time") 
+        return this.getUltimoEnteId("times");
 
       return this.getUltimoEnteId("jogadores");
     },
 
-    ente_novin() {
+   
+  },
+  methods: {
+     ente_novin() {
       if (this.entenome === "Time") {
-        return {
-          id: useSheetApi ? "INCREMENT" : this.incrementaId,
-          nome: "",
-          estado: "",
-          tecnico: "",
-          torcida: "",
-          fundacao_ano: "",
-          info: "",
-          jogadores:[]
-        };
+          return {
+            id: useSheetApi ? "INCREMENT" : this.incrementaId,
+            nome: "",
+            estado: "",
+            tecnico: "",
+            torcida: "",
+            fundacao_ano: "",
+            info: "",
+            jogadores:[]
+          };
       }
       return {
         id: useSheetApi ? "INCREMENT" : this.incrementaId,
@@ -81,22 +84,25 @@ export default {
         posicao: "",
       };
     },
-  },
-  methods: {
     async salvar() {
-      let formPayload = {
-        time:this.Time,
-        jogador:this.Jogador
+     
+      if(this.entidadepai){
+        if(!this.entidade){
+          this.$bus.emit('addJogador',this.Jogador) 
+           
+          this[this.entenome] = this.ente_novin();
+        }else{
+          this.$bus.emit('editJogador',this.Jogador)
+        }
+        return;
       }
-      /* if(this.entidadepai){
-        this.$bus.emit('salvarJogadorNoTime',this.Jogador)
-      } */
+
       if (!this.entidade) { 
         await this.$store.dispatch(
           `criar${this.entenome}`,
-          formPayload
+          this[this.entenome]
         );
-        this[this.entenome] = this.ente_novin;
+        this[this.entenome] = this.ente_novin();
       } else {
         await this.$store.dispatch(`editar${this.entenome}`, {
           original: this.entidade,
@@ -115,19 +121,24 @@ export default {
         name: "home",
       });
     },
-  },
-  created() {
-    /* this.$bus.on('editarTime', (time) => { 
-        this.editando = time
-        this.time = {...time} 
-    })  */
-  },
-  mounted() {
+  atualizaEditEntidade(){
     if (this.entidade) {
       this[this.entenome] = { ...this.entidade };
     } else {
-      this[this.entenome] = this.ente_novin;
+      this[this.entenome] = this.ente_novin();
     }
+  }  
+  },
+  
+  watch:{
+    entidade:function(novo,velho){
+      this.atualizaEditEntidade()
+    }
+  
+  },
+  mounted() {
+    console.log('montando')
+    this.atualizaEditEntidade()
     if(this.entidadepai){
       this.Time = this.entidadepai
     }

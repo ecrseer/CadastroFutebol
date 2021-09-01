@@ -38,6 +38,7 @@ const store = createStore({
       }
 
     },
+    getTodosJogadoresNoTime(){},
     getJogadoresDisponiveis(state) {
       return function () {
         let jogadoresIndisponiveis = new Set()
@@ -73,13 +74,15 @@ const store = createStore({
       state.jogadores = jogadoress
       state.carregando = false
     },
-    jogador_criar(state, [time, jogador]) {
-      debugger
-      let refTimeState = state.times.find(tme => tme.id === time.id)
-      if (!refTimeState.jogadores || !Array.isArray(refTimeState.jogadores)) {
-        refTimeState.jogadores = []
+    jogador_criarnotime(state, [time, jogador]) {
+      let indx = state.times.indexOf(time)
+      if(indx>=0){
+        if(!Array.isArray(state.times[indx].jogadores)){
+          state.times[indx]=[]
+        }
+        state.times[indx].jogadores.push(jogador)        
       }
-      refTimeState.jogadores.push(jogador)
+
       state.carregando = false
     },
     time_carregado(state, times) {
@@ -88,9 +91,11 @@ const store = createStore({
       state.carregando = false
     },
     time_apagar(state, time) {
-      //let index = state.times.indexOf(time)
-      let times_timeapagado = state.times.filter(timestate => timestate.id !== time.id)
-      state.times = times_timeapagado;
+      
+      let indx = state.times.indexOf(time)
+      if(indx>=0){
+        state.times.splice(indx,1)
+      }
       state.carregando = false
     },
     time_editar(state, { original, editado }) {
@@ -122,16 +127,10 @@ const store = createStore({
 
       }
 
-    },
-    adicionar_time_jogador(state, [idtime, jogador]) {
-
-      let timeatual = state.times.filter(time => time.id === idtime)[0]
-      if (!timeatual.jogadores) {
-        timeatual.jogadores = []
-      }
-      timeatual.jogadores.push(jogador)
-    },
+    }, 
     ente_mutacao_generica(state, [mutacao, entenome, ente]) {
+      /* state[entepai].indexOf(ente)
+      state[entepai][entenome]  */
       if (mutacao === 'criar') {
         state[entenome].push(ente)
       }
@@ -142,6 +141,12 @@ const store = createStore({
       if (mutacao === 'apagar') {
         let entestate_enteapagado = state[entenome].filter(entestate => entestate.id !== ente.id)
         state[entenome] = entestate_enteapagado;
+
+        let indx = state[entenome].indexOf(ente)
+        if(indx>=0){
+          state[entenome].splice(indx,1)
+        }
+
       }
 
 
@@ -175,9 +180,6 @@ const store = createStore({
       commit('nao_carregando')
 
     },
-    async adicionarJogadorAoTime({ commit }, [idtime, jogador]) {
-      commit('adicionar_time_jogador', [idtime, jogador])
-    },
     async criarJogador({ commit }, timeEjogador) {
       commit('carregando')
       if (useSheetApi) {
@@ -186,9 +188,8 @@ const store = createStore({
           { data: [jogador] }
         )
 
-      }
-      debugger
-      commit('jogador_criar', timeEjogador)
+      } 
+      commit('jogador_criarnotime', timeEjogador)
 
     },
     async editarJogador({ commit }, { original, editado }) {

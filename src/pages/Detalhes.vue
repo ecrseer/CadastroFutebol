@@ -13,7 +13,7 @@
         </v-card>
         <v-card class="pa-2" outlined tile>
           <TabelaGenerica
-            v-bind:lista="jogadoresNoTime"
+            v-bind:lista="timeSelecionado.jogadores"
             :entenome="'Jogador'"
           />
         </v-card>
@@ -22,6 +22,7 @@
           <h5>adicionar jogador no time</h5>
           <Formulario
             v-bind:entenome="'Jogador'"
+            v-bind:entidade="jogadorSelecionado"
             v-bind:entidadepai="timeSelecionado"
         /></v-card>
       </v-col>
@@ -41,14 +42,17 @@ import TabelaGenerica from "../components/TabelaGenerica.vue";
 
 export default {
   components: { Formulario, TabelaGenerica, ListaCards },
-
+  data:()=>{
+    return{
+      jogadorSelecionado:false
+    }
+  },
   computed: {
     ...mapGetters(["getEntePorId", "getJogadoresDisponiveis"]),
 
     timeSelecionado() {
       return this.getEntePorId("times", this.$route.params.idtime);
     },
-    jogadorSelecionado() {},
     jogadoresNoTime() {
       if (this.timeSelecionado.jogadores >= 1) {
         return this.timeSelecionado.jogadores;
@@ -60,17 +64,15 @@ export default {
     },
   },
   created() {
-    this.$bus.on("addJogador", (jogadr) => {
-      this.$store.dispatch("adicionarJogadorAoTime", [
-        this.$route.params.idtime,
+    this.$bus.on("addJogador", (jogadr) => { 
+      
+      this.$store.dispatch("criarJogador", [
+        this.timeSelecionado,
         jogadr,
       ]);
     });
-    this.$bus.on("editJogador", (jogadr) => {
-      this.$store.dispatch("editJogadorDoTime", [
-        this.$route.params.idtime,
-        jogadr,
-      ]);
+    this.$bus.on("selectJogador", (jogadr) => {      
+       this.jogadorSelecionado = jogadr
     });
   } /* 
   mounted() {
