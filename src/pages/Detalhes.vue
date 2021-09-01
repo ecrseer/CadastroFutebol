@@ -72,15 +72,22 @@ export default {
       this.$store.dispatch("editarJogador", antigoEnovo);
     });
 
-    this.$bus.on("selectJogador", (jogadr) => {
+
+    this.$bus.on("TabelaSelectJogador", (jogadr) => {
       this.jogadorSelecionado = jogadr;
     });
+    this.$bus.on("FormUnselectJogador",()=>{
+      this.jogadorSelecionado = false
+    })
   } /* 
   mounted() {
     this.$store.dispatch("carregar");    
   }, */,
   unmounted() {
     this.$bus.off("FormAddJogador");
+    this.$bus.off("FormEditJogador");
+    this.$bus.off("TabelaSelectJogador");
+    this.$bus.off("FormUnselectJogador");
   },
 };
 </script>

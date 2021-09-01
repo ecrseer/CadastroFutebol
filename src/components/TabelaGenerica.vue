@@ -33,7 +33,7 @@ export default {
   methods: {
     editar(item) {
       if(this.entenome==="Jogador"){
-        this.$bus.emit('selectJogador',item)
+        this.$bus.emit('TabelaSelectJogador',item)
         return;
       }
 

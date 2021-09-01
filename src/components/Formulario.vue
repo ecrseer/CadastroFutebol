@@ -1,6 +1,8 @@
 <template>
   <form>
     <div>
+      <span v-if="entidade"> Editar {{ entenome }}</span>
+      <span v-else> Criar {{ entenome }}</span>
       <section v-if="istimef">
         <Campo nome="nome" v-model="Time.nome"></Campo>
         <CampoDropDown
@@ -82,6 +84,10 @@ export default {
         posicao: "",
       };
     },
+    limparEntidade() {
+      this.$bus.emit("FormUnselectJogador");
+      this[this.entenome] = this.ente_novin();
+    },
     async salvar() {
       let payloadEdicao = {
         original: this.entidade,
@@ -89,7 +95,7 @@ export default {
       };
 
       if (this.entidadepai) {
-        if (!this.entidade) { 
+        if (!this.entidade) {
           this.$bus.emit("FormAddJogador", this.Jogador);
           this[this.entenome] = this.ente_novin();
         } else {
@@ -106,21 +112,23 @@ export default {
         this[this.entenome] = this.ente_novin();
       } else {
         await this.$store.dispatch(`editar${this.entenome}`, payloadEdicao);
-      } 
+      }
       this.$router.push({
         name: "home",
       });
     },
-    async apagar(time) {
+    async apagar() {
+      console.log('apagando')
       await this.$store.dispatch(`apagar${this.entenome}`, this.entidade);
-
-      this.$router.push({
-        name: "home",
-      });
+      
+      if (this.entenome !== "Jogador") {
+        this.$router.push({
+          name: "home",
+        });
+      }
+      this.limparEntidade()
     },
-    limparEntidade() {
-      this[this.entenome] = this.ente_novin();
-    },
+    
     atualizaEditEntidade() {
       if (this.entidade) {
         this[this.entenome] = { ...this.entidade };

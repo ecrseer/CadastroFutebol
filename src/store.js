@@ -38,7 +38,7 @@ const store = createStore({
       }
 
     },
-    getTodosJogadoresNoTime(){},
+    getTodosJogadoresNoTime() { },
     getJogadoresDisponiveis(state) {
       return function () {
         let jogadoresIndisponiveis = new Set()
@@ -53,8 +53,8 @@ const store = createStore({
 
         for (let jogador of jogadoresIndisponiveis) {
           jogadoresDisponiveis.delete(jogador)
-        } 
-        
+        }
+
         let arrJogadoresDisponiveis = [...jogadoresDisponiveis]
 
         return arrJogadoresDisponiveis;
@@ -76,16 +76,40 @@ const store = createStore({
     },
     jogador_criarnotime(state, [time, jogador]) {
       let indx = state.times.indexOf(time)
-      if(indx>=0){
-        if(!Array.isArray(state.times[indx].jogadores)){
-          
-          state.times[indx]=[]
+      if (indx >= 0) {
+        if (!Array.isArray(state.times[indx].jogadores)) {
+
+          state.times[indx] = []
         }
-        console.log('jogador_criarnotime')
-        state.times[indx].jogadores.push(jogador)        
+        state.times[indx].jogadores.push(jogador)
       }
 
       state.carregando = false
+    },
+    jogador_apagarnotime(state, jogador) {
+
+      let naoEncontrou = true
+      let yy = 0, xx = 0;
+
+      while (naoEncontrou) { 
+        for (let indjogador = 0;indjogador < state.times[yy].jogadores.length;indjogador++) 
+        { 
+
+          if (state.times[yy].jogadores[indjogador] === jogador) {
+            xx = indjogador
+            naoEncontrou = false;
+            break;
+          }
+        }
+        if (naoEncontrou) {
+          yy++;
+        }
+
+      }
+
+
+      state.times[yy].jogadores.splice(xx, 1)
+      state.carregando=false
     },
     time_carregado(state, times) {
 
@@ -93,10 +117,10 @@ const store = createStore({
       state.carregando = false
     },
     time_apagar(state, time) {
-      
+
       let indx = state.times.indexOf(time)
-      if(indx>=0){
-        state.times.splice(indx,1)
+      if (indx >= 0) {
+        state.times.splice(indx, 1)
       }
       state.carregando = false
     },
@@ -108,28 +132,6 @@ const store = createStore({
       state.times.push(time)
       state.carregando = false
     },
-    referencia_jogador_time(state) {
-
-      for (const time of state.times) {
-
-        let idJogadoresDevemSerReferenciados = []
-        if (time.jogadores) {
-          time.jogadores.forEach(jogador =>
-            idJogadoresDevemSerReferenciados.push(jogador.id))
-
-        }
-        if (idJogadoresDevemSerReferenciados >= 1) {
-          time.jogadores = []
-          for (const idsJogador of idJogadoresDevemSerReferenciados) {
-            let refJogadorState = state.jogadores.filter(jogador => jogador.id === idsJogador)[0]
-             
-            time.jogadores.push(refJogadorState)
-          } console.log(`time.jogadores agora eh ${time.jogadores}`)
-        }
-
-      }
-
-    }, 
     ente_mutacao_generica(state, [mutacao, entenome, ente]) {
       /* state[entepai].indexOf(ente)
       state[entepai][entenome]  */
@@ -145,8 +147,8 @@ const store = createStore({
         state[entenome] = entestate_enteapagado;
 
         let indx = state[entenome].indexOf(ente)
-        if(indx>=0){
-          state[entenome].splice(indx,1)
+        if (indx >= 0) {
+          state[entenome].splice(indx, 1)
         }
 
       }
@@ -190,7 +192,7 @@ const store = createStore({
           { data: [jogador] }
         )
 
-      }  
+      }
       commit('jogador_criarnotime', timeEjogador)
 
     },
@@ -206,6 +208,16 @@ const store = createStore({
       commit('ente_mutacao_generica', ['editar', 'jogadores', { original, editado }])
 
     },
+    async apagarJogador({ commit }, Jogador) {
+      commit('carregando')
+      if (useSheetApi) {
+        await axios.delete(`${baseUrlApi_jogadores}/id/${Jogador.id}`)
+
+      }
+      commit('jogador_apagarnotime', Jogador)
+
+
+    },
     async apagarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
@@ -216,7 +228,7 @@ const store = createStore({
 
 
     },
-    async criarTime({ commit }, [time,_]) {
+    async criarTime({ commit }, [time, _]) {
       commit('carregando')
       if (useSheetApi) {
         await axios.post(
