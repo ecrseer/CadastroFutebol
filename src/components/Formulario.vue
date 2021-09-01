@@ -41,7 +41,7 @@ import { ESTADOS, useSheetApi } from "../const.js";
 export default {
   name: "Formulario",
   components: { Campo, CampoDropDown, CampoText },
-  props: ["entidade", "istimef", "entenome"],
+  props: ["entidade", "istimef", "entenome","entidadepai"],
   data() {
     return {
       editando: false,
@@ -70,6 +70,7 @@ export default {
           torcida: "",
           fundacao_ano: "",
           info: "",
+          jogadores:[]
         };
       }
       return {
@@ -83,10 +84,11 @@ export default {
   },
   methods: {
     async salvar() {
+//      let payLoadType= this.entenome === "Time" ? this.time : [this.time]
       if (!this.entidade) { 
         await this.$store.dispatch(
           `criar${this.entenome}`,
-          this[this.entenome]
+          [this[this.entenome]]
         );
         this[this.entenome] = this.ente_novin;
       } else {
@@ -94,8 +96,7 @@ export default {
           original: this.entidade,
           editado: this[this.entenome],
         });
-
-        this[this.entenome] = {};
+ 
       }
       this.$router.push({
         name: "home",

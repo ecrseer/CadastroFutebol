@@ -22,44 +22,44 @@ const store = createStore({
   getters: { // equivalente ao computed de um componente
 
     getEntePorId(state) {
-      return function(entenome,idEnte){
-        
+      return function (entenome, idEnte) {
+
         let enteFiltrado = state[entenome].filter(
-            (ente) => Number(ente.id) === Number(idEnte))[0]; 
-            return enteFiltrado;
+          (ente) => Number(ente.id) === Number(idEnte))[0];
+        return enteFiltrado;
       }
     },
     getUltimoEnteId(state) {
       return function (entenome) {
         let lastposi = state[entenome].length - 1
-        
-        let novoid = Number(state[entenome][lastposi].id) + 2; 
+
+        let novoid = Number(state[entenome][lastposi].id) + 2;
         return novoid + "";
       }
 
     },
-    getJogadoresDisponiveis(state){
-      return function(){
-        let jogadoresIndisponiveis= new Set()
-        
-        state.times.forEach(time=>{ 
-            if(time.jogadores){
-                jogadoresIndisponiveis.add(...time.jogadores)
-         }
+    getJogadoresDisponiveis(state) {
+      return function () {
+        let jogadoresIndisponiveis = new Set()
+
+        state.times.forEach(time => {
+          if (time.jogadores) {
+            jogadoresIndisponiveis.add(...time.jogadores)
+          }
         })
- 
-        let jogadoresDisponiveis = new Set(state.jogadores) 
-        
-        for(let jogador of jogadoresIndisponiveis){
-                 jogadoresDisponiveis.delete(jogador)
+
+        let jogadoresDisponiveis = new Set(state.jogadores)
+
+        for (let jogador of jogadoresIndisponiveis) {
+          jogadoresDisponiveis.delete(jogador)
         } debugger
         let arrJogadoresDisponiveis = [...jogadoresDisponiveis]
-        
+
         return arrJogadoresDisponiveis;
 
-        }
       }
-    
+    }
+
   },
   mutations: { // altera o state
     carregando(state) {
@@ -72,12 +72,16 @@ const store = createStore({
       state.jogadores = jogadoress
       state.carregando = false
     },
-    jogador_criar(state, jogador) {
-      state.jogadores.push(jogador)
+    jogador_criar(state, [time, jogador]) {
+      let refTimeState = state.times.find(tme => tme.id === time.id)
+      if (!refTimeState.jogadores || !Array.isArray(refTimeState.jogadores)) {
+        refTimeState.jogadores = []
+      }
+      refTimeState.jogadores.push(jogador)
       state.carregando = false
     },
     time_carregado(state, times) {
-      
+
       state.times = times
       state.carregando = false
     },
@@ -95,49 +99,49 @@ const store = createStore({
       state.times.push(time)
       state.carregando = false
     },
-    referencia_jogador_time(state){
-      
+    referencia_jogador_time(state) {
+
       for (const time of state.times) {
-        
-        let idJogadoresDevemSerReferenciados=[]
-        if(time.jogadores){
-          time.jogadores.forEach(jogador=>
+
+        let idJogadoresDevemSerReferenciados = []
+        if (time.jogadores) {
+          time.jogadores.forEach(jogador =>
             idJogadoresDevemSerReferenciados.push(jogador.id))
-            
-          }
-        if(idJogadoresDevemSerReferenciados>=1){
-            time.jogadores = []           
-            for (const idsJogador of idJogadoresDevemSerReferenciados) {
-            let refJogadorState = state.jogadores.filter(jogador=>jogador.id===idsJogador)[0]
+
+        }
+        if (idJogadoresDevemSerReferenciados >= 1) {
+          time.jogadores = []
+          for (const idsJogador of idJogadoresDevemSerReferenciados) {
+            let refJogadorState = state.jogadores.filter(jogador => jogador.id === idsJogador)[0]
             debugger;
             time.jogadores.push(refJogadorState)
-          }console.log(`time.jogadores agora eh ${time.jogadores}`)
+          } console.log(`time.jogadores agora eh ${time.jogadores}`)
         }
 
       }
 
     },
-    adicionar_time_jogador(state,[idtime,jogador]){
-      
-      let timeatual = state.times.filter(time=>time.id===idtime)[0]
-      if(!timeatual.jogadores){
+    adicionar_time_jogador(state, [idtime, jogador]) {
+
+      let timeatual = state.times.filter(time => time.id === idtime)[0]
+      if (!timeatual.jogadores) {
         timeatual.jogadores = []
       }
       timeatual.jogadores.push(jogador)
     },
-    ente_mutacao(state,[mutacao,entenome,ente]){
-      if(mutacao==='criar'){ 
+    ente_mutacao_generica(state, [mutacao, entenome, ente]) {
+      if (mutacao === 'criar') {
         state[entenome].push(ente)
       }
-      if(mutacao==='editar'){
-        let {original,editado} = ente
+      if (mutacao === 'editar') {
+        let { original, editado } = ente
         Object.assign(original, editado)
       }
-      if(mutacao==='apagar'){
+      if (mutacao === 'apagar') {
         let entestate_enteapagado = state[entenome].filter(entestate => entestate.id !== ente.id)
-         state[entenome] = entestate_enteapagado;
+        state[entenome] = entestate_enteapagado;
       }
-      
+
 
       state.carregando = false
     }
@@ -145,9 +149,9 @@ const store = createStore({
   },
   actions: { // equivalente ao methods de um componente
     async carregar({ commit }) {
-      
-      commit('carregando') 
-      
+
+      commit('carregando')
+
       if (this.state.jogadores.length < 2) {
         axios.get(`${baseUrlApi_jogadores}`).then(({ data }) => {
           let realData = data;
@@ -165,14 +169,14 @@ const store = createStore({
           }
           commit('time_carregado', realData)
         })
-      } 
+      }
       commit('nao_carregando')
 
     },
-    async adicionarJogadorAoTime({commit},[idtime,jogador]){
-      commit('adicionar_time_jogador',[idtime,jogador])
+    async adicionarJogadorAoTime({ commit }, [idtime, jogador]) {
+      commit('adicionar_time_jogador', [idtime, jogador])
     },
-    async criarJogador({ commit }, jogador) {
+    async criarJogador({ commit }, timeEjogador) {
       commit('carregando')
       if (useSheetApi) {
         await axios.post(
@@ -181,7 +185,7 @@ const store = createStore({
         )
 
       }
-      commit('jogador_criar', jogador)
+      commit('jogador_criar', timeEjogador)
 
     },
     async editarJogador({ commit }, { original, editado }) {
@@ -193,8 +197,8 @@ const store = createStore({
         )
 
       }
-      commit('ente_mutacao', ['editar','jogadores',{ original, editado }])
-    
+      commit('ente_mutacao_generica', ['editar', 'jogadores', { original, editado }])
+
     },
     async apagarTime({ commit }, time) {
       commit('carregando')
@@ -206,7 +210,7 @@ const store = createStore({
 
 
     },
-    async criarTime({ commit }, time) {
+    async criarTime({ commit }, [time,_]) {
       commit('carregando')
       if (useSheetApi) {
         await axios.post(
@@ -214,8 +218,8 @@ const store = createStore({
           { data: [time] }
         )
 
-      } 
-      commit('ente_mutacao', ['criar','times',time])
+      }
+      commit('ente_mutacao_generica', ['criar', 'times', time])
 
     },
     async editarTime({ commit }, { original, editado }) {
@@ -227,8 +231,8 @@ const store = createStore({
         )
 
       }
-      commit('ente_mutacao', ['editar','times',{ original, editado }])
-      
+      commit('ente_mutacao_generica', ['editar', 'times', { original, editado }])
+
     }
 
   },
