@@ -65,6 +65,7 @@ export default {
   },
   created() {
     this.$bus.on("FormAddJogador", (jogadr) => {
+       
       this.$store.dispatch("criarJogador", [this.timeSelecionado, jogadr]);
     });
     this.$bus.on("FormEditJogador", (antigoEnovo) => {
@@ -79,7 +80,7 @@ export default {
     this.$store.dispatch("carregar");    
   }, */,
   unmounted() {
-    this.$bus.off("addJogador");
+    this.$bus.off("FormAddJogador");
   },
 };
 </script>

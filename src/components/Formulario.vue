@@ -89,7 +89,7 @@ export default {
       };
 
       if (this.entidadepai) {
-        if (!this.entidade) {
+        if (!this.entidade) { 
           this.$bus.emit("FormAddJogador", this.Jogador);
           this[this.entenome] = this.ente_novin();
         } else {
@@ -106,8 +106,7 @@ export default {
         this[this.entenome] = this.ente_novin();
       } else {
         await this.$store.dispatch(`editar${this.entenome}`, payloadEdicao);
-      }
-      debugger;
+      } 
       this.$router.push({
         name: "home",
       });
@@ -126,7 +125,7 @@ export default {
       if (this.entidade) {
         this[this.entenome] = { ...this.entidade };
       } else {
-        limparEntidade();
+        this.limparEntidade();
       }
     },
   },

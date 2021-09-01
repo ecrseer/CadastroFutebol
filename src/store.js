@@ -78,8 +78,10 @@ const store = createStore({
       let indx = state.times.indexOf(time)
       if(indx>=0){
         if(!Array.isArray(state.times[indx].jogadores)){
+          
           state.times[indx]=[]
         }
+        console.log('jogador_criarnotime')
         state.times[indx].jogadores.push(jogador)        
       }
 
@@ -188,7 +190,7 @@ const store = createStore({
           { data: [jogador] }
         )
 
-      } 
+      }  
       commit('jogador_criarnotime', timeEjogador)
 
     },
