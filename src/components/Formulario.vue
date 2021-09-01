@@ -24,10 +24,11 @@
         <Campo nome="posicao" v-model="Jogador.posicao"></Campo>
       </section>
       <span v-if="carregando">carregando...</span>
-      <button v-else @click="salvar" id="test_btnsalvar">salvar</button>
-
-      <span v-if="carregando">carregando</span>
-      <button v-else @click="apagar">apagar</button>
+      <div v-else>
+        <button @click="salvar" id="test_btnsalvar">salvar</button>
+        <button @click="apagar">apagar</button>
+        <button v-on:click="limparEntidade">Sair da edição</button>
+      </div>
     </div>
   </form>
 </template>
@@ -41,7 +42,7 @@ import { ESTADOS, useSheetApi } from "../const.js";
 export default {
   name: "Formulario",
   components: { Campo, CampoDropDown, CampoText },
-  props: ["entidade", "istimef", "entenome","entidadepai"],
+  props: ["entidade", "istimef", "entenome", "entidadepai"],
   data() {
     return {
       editando: false,
@@ -54,27 +55,24 @@ export default {
     ...mapState(["carregando"]),
     ...mapGetters(["getUltimoEnteId"]),
     incrementaId() {
-      if (this.entenome === "Time") 
-        return this.getUltimoEnteId("times");
+      if (this.entenome === "Time") return this.getUltimoEnteId("times");
 
       return this.getUltimoEnteId("jogadores");
     },
-
-   
   },
   methods: {
-     ente_novin() {
+    ente_novin() {
       if (this.entenome === "Time") {
-          return {
-            id: useSheetApi ? "INCREMENT" : this.incrementaId,
-            nome: "",
-            estado: "",
-            tecnico: "",
-            torcida: "",
-            fundacao_ano: "",
-            info: "",
-            jogadores:[]
-          };
+        return {
+          id: useSheetApi ? "INCREMENT" : this.incrementaId,
+          nome: "",
+          estado: "",
+          tecnico: "",
+          torcida: "",
+          fundacao_ano: "",
+          info: "",
+          jogadores: [],
+        };
       }
       return {
         id: useSheetApi ? "INCREMENT" : this.incrementaId,
@@ -85,31 +83,31 @@ export default {
       };
     },
     async salvar() {
-     
-      if(this.entidadepai){
-        if(!this.entidade){
-          this.$bus.emit('addJogador',this.Jogador) 
-           
+      let payloadEdicao = {
+        original: this.entidade,
+        editado: this[this.entenome],
+      };
+
+      if (this.entidadepai) {
+        if (!this.entidade) {
+          this.$bus.emit("FormAddJogador", this.Jogador);
           this[this.entenome] = this.ente_novin();
-        }else{
-          this.$bus.emit('editJogador',this.Jogador)
+        } else {
+          this.$bus.emit("FormEditJogador", payloadEdicao);
         }
         return;
       }
 
-      if (!this.entidade) { 
+      if (!this.entidade) {
         await this.$store.dispatch(
           `criar${this.entenome}`,
           this[this.entenome]
         );
         this[this.entenome] = this.ente_novin();
       } else {
-        await this.$store.dispatch(`editar${this.entenome}`, {
-          original: this.entidade,
-          editado: this[this.entenome],
-        });
- 
+        await this.$store.dispatch(`editar${this.entenome}`, payloadEdicao);
       }
+      debugger;
       this.$router.push({
         name: "home",
       });
@@ -121,26 +119,28 @@ export default {
         name: "home",
       });
     },
-  atualizaEditEntidade(){
-    if (this.entidade) {
-      this[this.entenome] = { ...this.entidade };
-    } else {
+    limparEntidade() {
       this[this.entenome] = this.ente_novin();
-    }
-  }  
+    },
+    atualizaEditEntidade() {
+      if (this.entidade) {
+        this[this.entenome] = { ...this.entidade };
+      } else {
+        limparEntidade();
+      }
+    },
   },
-  
-  watch:{
-    entidade:function(novo,velho){
-      this.atualizaEditEntidade()
-    }
-  
+
+  watch: {
+    entidade: function (novo, velho) {
+      this.atualizaEditEntidade();
+    },
   },
   mounted() {
-    console.log('montando')
-    this.atualizaEditEntidade()
-    if(this.entidadepai){
-      this.Time = this.entidadepai
+    console.log("montando");
+    this.atualizaEditEntidade();
+    if (this.entidadepai) {
+      this.Time = this.entidadepai;
     }
   } /* ,
   unmounted() {

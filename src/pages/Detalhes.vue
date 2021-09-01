@@ -42,10 +42,10 @@ import TabelaGenerica from "../components/TabelaGenerica.vue";
 
 export default {
   components: { Formulario, TabelaGenerica, ListaCards },
-  data:()=>{
-    return{
-      jogadorSelecionado:false
-    }
+  data: () => {
+    return {
+      jogadorSelecionado: false,
+    };
   },
   computed: {
     ...mapGetters(["getEntePorId", "getJogadoresDisponiveis"]),
@@ -64,15 +64,15 @@ export default {
     },
   },
   created() {
-    this.$bus.on("addJogador", (jogadr) => { 
-      
-      this.$store.dispatch("criarJogador", [
-        this.timeSelecionado,
-        jogadr,
-      ]);
+    this.$bus.on("FormAddJogador", (jogadr) => {
+      this.$store.dispatch("criarJogador", [this.timeSelecionado, jogadr]);
     });
-    this.$bus.on("selectJogador", (jogadr) => {      
-       this.jogadorSelecionado = jogadr
+    this.$bus.on("FormEditJogador", (antigoEnovo) => {
+      this.$store.dispatch("editarJogador", antigoEnovo);
+    });
+
+    this.$bus.on("selectJogador", (jogadr) => {
+      this.jogadorSelecionado = jogadr;
     });
   } /* 
   mounted() {
