@@ -1,8 +1,8 @@
 <template>
   <form>
     <div>
-      <span v-if="entidade"> Editar {{ entenome }}</span>
-      <span v-else> Criar {{ entenome }}</span>
+      <h2 v-if="entidade"> Editar {{ entenome }}</h2>
+      <h2 v-else> Criar {{ entenome }}</h2>
       <section v-if="istimef">
         <Campo nome="nome" v-model="Time.nome"></Campo>
         <CampoDropDown
