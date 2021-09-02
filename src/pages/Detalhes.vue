@@ -14,7 +14,7 @@
 
         
         
-        <v-card class="pa-2 mb-6" outlined tile>
+        <v-card class="pa-2 mb-6 " outlined tile >
           <TabelaGenerica
             v-bind:lista="timeSelecionado.jogadores"
             :entenome="'Jogador'"
@@ -28,9 +28,7 @@
             v-bind:entenome="'Jogador'"
             v-bind:entidade="jogadorSelecionado"
             v-bind:entidadepai="timeSelecionado"
-        /></v-card>
-        <h3>Jogadores que podem ser adicionados</h3>
-        <ListaCards v-bind:entidades="jogadoresDisponiveis" />
+        /></v-card> 
       </v-col>
     </v-row>
   </v-container>

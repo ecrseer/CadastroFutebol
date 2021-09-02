@@ -1,9 +1,10 @@
 <template>
   <form v-on:submit.prevent="onSubmit">
     <div>
-      <h2 v-if="entidade"> Editar {{ entenome }}</h2>
-      <h2 v-else> Criar {{ entenome }}</h2>
-      <section v-if="istimef">
+      <h2 v-if="entidade">Editar {{ entenome }}</h2>
+      <h2 v-else>Criar {{ entenome }}</h2>
+    
+       <section v-if="istimef">
         <Campo nome="nome" v-model="Time.nome"></Campo>
         <CampoDropDown
           nome="estado"
@@ -19,17 +20,20 @@
         ></Campo>
         <CampoText tipo="texto" nome="info" v-model="Time.info"></CampoText>
       </section>
-      <section v-else>
+      <section  v-else>
         <Campo nome="nome" v-model="Jogador.nome"></Campo>
         <Campo nome="salario" v-model="Jogador.salario"></Campo>
         <Campo nome="camisa" tipo="number" v-model="Jogador.camisa"></Campo>
         <Campo nome="posicao" v-model="Jogador.posicao"></Campo>
       </section>
-      <span v-if="carregando">carregando...</span>
+      <v-progress-circular  v-if="carregando" indeterminate class="green lighten-5"></v-progress-circular>
+      
       <div v-else>
         <button @click="salvar" id="test_btnsalvar">salvar</button>
-        <button @click="apagar">apagar</button>
-        <button v-on:click="limparEntidade">Sair da edição</button>
+        <div v-if="entidade">
+          <button @click="apagar">apagar</button>
+          <button v-on:click="limparEntidade">Sair da edição</button>
+        </div>
       </div>
     </div>
   </form>
@@ -117,18 +121,17 @@ export default {
         name: "home",
       });
     },
-    async apagar() {
-      console.log('apagando')
+    async apagar() { 
       await this.$store.dispatch(`apagar${this.entenome}`, this.entidade);
-      
+
       if (this.entenome !== "Jogador") {
         this.$router.push({
           name: "home",
         });
       }
-      this.limparEntidade()
+      this.limparEntidade();
     },
-    
+
     atualizaEditEntidade() {
       if (this.entidade) {
         this[this.entenome] = { ...this.entidade };
@@ -143,15 +146,11 @@ export default {
       this.atualizaEditEntidade();
     },
   },
-  mounted() {
-    console.log("montando");
+  mounted() { 
     this.atualizaEditEntidade();
     if (this.entidadepai) {
       this.Time = this.entidadepai;
     }
-  } /* ,
-  unmounted() {
-    this.$bus.off("editar");
-  }, */,
+  } 
 };
 </script>
