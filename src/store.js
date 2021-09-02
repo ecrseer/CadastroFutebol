@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { baseUrlApi_times, useSheetApi, baseUrlApi_jogadores } from './const'
+import { baseUrlApi_times, useSheetApi, baseUrlApi_jogadores, baseUrlApi } from './const'
 import axios from 'axios'
 import createPersistedState from 'vuex-persistedstate'
 
@@ -31,10 +31,30 @@ const store = createStore({
     },
     getUltimoEnteId(state) {
       return function (entenome) {
+        if (entenome === "jogadores") {
+          state.carregando = true
+          let TodosIds = state.times.map(({ jogadores }) =>
+            jogadores.map(
+              ({ id }) => id
+            )
+          )
+          let todosIds1d = []
+          let nn=0
+           
+          if(!TodosIds[0].toString()){
+           TodosIds=[[1]]
+          }
+          for (const linha of TodosIds) { 
+            todosIds1d.push(...linha)
+          }
+          let maiorId = Math.max(...todosIds1d)
+          state.carregando = false
+          return `${(maiorId + 2)}`
+        }
         let lastposi = state[entenome].length - 1
 
         let novoid = Number(state[entenome][lastposi].id) + 2;
-        return novoid + "";
+        return `${novoid}`
       }
 
     },
@@ -63,7 +83,7 @@ const store = createStore({
     }
 
   },
-  mutations: { // altera o state
+  mutations: { // altera o state 
     carregando(state) {
       state.carregando = true
     },
@@ -91,9 +111,8 @@ const store = createStore({
       let naoEncontrou = true
       let yy = 0, xx = 0;
 
-      while (naoEncontrou) { 
-        for (let indjogador = 0;indjogador < state.times[yy].jogadores.length;indjogador++) 
-        { 
+      while (naoEncontrou) {
+        for (let indjogador = 0; indjogador < state.times[yy].jogadores.length; indjogador++) {
 
           if (state.times[yy].jogadores[indjogador] === jogador) {
             xx = indjogador
@@ -109,7 +128,7 @@ const store = createStore({
 
 
       state.times[yy].jogadores.splice(xx, 1)
-      state.carregando=false
+      state.carregando = false
     },
     time_carregado(state, times) {
 
@@ -143,8 +162,6 @@ const store = createStore({
         Object.assign(original, editado)
       }
       if (mutacao === 'apagar') {
-        let entestate_enteapagado = state[entenome].filter(entestate => entestate.id !== ente.id)
-        state[entenome] = entestate_enteapagado;
 
         let indx = state[entenome].indexOf(ente)
         if (indx >= 0) {
@@ -224,11 +241,16 @@ const store = createStore({
         await axios.delete(`${baseUrlApi_times}/id/${time.id}`)
 
       }
-      commit('time_apagar', time)
+      console.log(`tst${baseUrlApi['jogadores']}`)
+      commit('ente_mutacao_generica', ['apagar', 'times', time])
 
 
     },
-    async criarTime({ commit }, [time, _]) {
+    async acaoDe({ commit }, [acao, entenome, ente]) {
+      
+
+    },
+    async criarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
         await axios.post(

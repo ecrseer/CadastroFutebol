@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form v-on:submit.prevent="onSubmit">
     <div>
       <h2 v-if="entidade"> Editar {{ entenome }}</h2>
       <h2 v-else> Criar {{ entenome }}</h2>

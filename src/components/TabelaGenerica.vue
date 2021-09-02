@@ -9,7 +9,8 @@
     </thead>
     <tbody id="test_tabela">
       <tr v-for="item in lista" v-bind:key="item">
-        <td v-for="(atributo, key) in item" v-bind:key="key">
+        <td v-for="(atributo, key) in item" v-bind:key="key"
+        v-bind:class="'.selecionado'">
           <span v-if="!Array.isArray(atributo)">{{atributo}}</span>
         </td>
         <td>
@@ -33,6 +34,11 @@ export default {
   methods: {
     editar(item) {
       if(this.entenome==="Jogador"){
+        if(this.entidadeSelecionada === item){
+
+        }else{
+          
+        }
         this.$bus.emit('TabelaSelectJogador',item)
         return;
       }
