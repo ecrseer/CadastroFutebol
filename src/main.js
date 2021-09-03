@@ -9,6 +9,7 @@ import vuetify from './plugins/vuetify'
 
 const bus = mitt()
 const app = createApp(App)
+
 app.use(store)
 app.use(rotas)
 app.use(vuetify)

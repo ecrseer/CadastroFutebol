@@ -79,10 +79,7 @@ export default {
     this.$bus.on("FormUnselectJogador",()=>{
       this.jogadorSelecionado = false
     })
-  } /* 
-  mounted() {
-    this.$store.dispatch("carregar");    
-  }, */,
+  } ,
   unmounted() {
     this.$bus.off("FormAddJogador");
     this.$bus.off("FormEditJogador");

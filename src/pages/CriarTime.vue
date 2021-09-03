@@ -1,5 +1,4 @@
-<template>
-  <h2>pagina Criar</h2>
+<template> 
   <Formulario v-bind:istimef="true" v-bind:entenome="'Time'"/>
 </template>
 

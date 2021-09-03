@@ -35,12 +35,13 @@ export default {
     editar(item) {
       if(this.entenome==="Jogador"){
         if(this.entidadeSelecionada === item){
+          this.$bus.emit("FormUnselectJogador");
           this.entidadeSelecionada={}
-        }else{
-          console.log('ev'+item.nome)
+        }else{          
+          this.$bus.emit('TabelaSelectJogador',item)
           this.entidadeSelecionada=item
         }
-        this.$bus.emit('TabelaSelectJogador',item)
+
         return;
       }
 

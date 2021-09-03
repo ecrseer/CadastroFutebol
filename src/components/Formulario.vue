@@ -25,14 +25,18 @@
         <Campo nome="salario" v-model="Jogador.salario"></Campo>
         <Campo nome="camisa" tipo="number" v-model="Jogador.camisa"></Campo>
         <Campo nome="posicao" v-model="Jogador.posicao"></Campo>
+        <CampoDropDown
+          nome="estado"
+          v-model="Time.estado"
+          :itens="ESTADOS"
+        ></CampoDropDown>
       </section>
       <v-progress-circular  v-if="carregando" indeterminate class="green lighten-5"></v-progress-circular>
       
       <div v-else>
         <button @click="salvar" id="test_btnsalvar">salvar</button>
         <div v-if="entidade">
-          <button @click="apagar">apagar</button>
-          <button v-on:click="limparEntidade">Sair da edição</button>
+          <button @click="apagar">apagar</button> 
         </div>
       </div>
     </div>
@@ -61,7 +65,8 @@ export default {
     ...mapState(["carregando"]),
     ...mapGetters(["getUltimoEnteId"]),
     incrementaId() {
-      if (this.entenome === "Time") return this.getUltimoEnteId("times");
+      if (this.entenome === "Time")
+       return this.getUltimoEnteId("times");
 
       return this.getUltimoEnteId("jogadores");
     },

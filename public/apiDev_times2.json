@@ -1,0 +1,38 @@
+{
+    "times":[
+        {
+            "id": "1",
+            "nome": "Flamengo",
+            "estado": "SP",
+            "tecnico": "A",
+            "torcida": "43913",
+            "fundacao_ano": "1949",
+            "info": "umavezflamengo",
+            "jogadores":[
+                {"id":1,"nome":"Moyna","camisa":66,"salario":"$36076.88","posicao":"pricing structure"},
+        {"id":2,"nome":"Shelley","camisa":2,"salario":"$46731.22","posicao":"client-server"}
+            ]
+        },
+        {
+            "id": "4",
+            "nome": "Atletico paranaense",
+            "estado": "PA",
+            "tecnico": "D",
+            "torcida": "23943",
+            "fundacao_ano": "1999",
+            "info": "botafogobotafogo",
+            "jogadores":[]
+        },
+        {
+            "id": "5",
+            "nome": "Palmeiras",
+            "estado": "SP",
+            "tecnico": "nsei",
+            "torcida": "3049",
+            "fundacao_ano": "1988",
+            "info": "pp",
+            "jogadores":[]
+        }
+    ]
+     
+}

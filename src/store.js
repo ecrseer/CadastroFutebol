@@ -1,11 +1,31 @@
 import { createStore } from 'vuex'
-import { baseUrlApi_times, useSheetApi, baseUrlApi_jogadores, baseUrlApi } from './const'
+import { useSheetApi, baseUrlApi } from './const'
 import axios from 'axios'
 import createPersistedState from 'vuex-persistedstate'
 
 const meuDataStore = createPersistedState({
   paths: ["times", "jogadores"]
 })
+const achatarArray = (Array2D) => {
+  let array1D = []
+  for (const linha of Array2D) {
+    array1D.push(...linha)
+  }
+  return array1D;
+}
+const ll =() =>{
+  async function transformaJson(timesjson){
+    let timesNoJson=timesjson.data;
+       timesNoJson=timesNoJson.map(
+(time)=>{
+    console.log('miau')
+            let listaJogadores = JSON.parse(time.jogadores)
+            time.jogadores=listaJogadores
+            return time
+             }
+       )
+}
+}
 
 const store = createStore({
   state() {  // equivalente ao data de um componente
@@ -38,16 +58,12 @@ const store = createStore({
               ({ id }) => id
             )
           )
-          let todosIds1d = []
-          let nn=0
-           
-          if(!TodosIds[0].toString()){
-           TodosIds=[[1]]
+          if (!TodosIds[0].toString()) {
+            TodosIds = [[1]]
           }
-          for (const linha of TodosIds) { 
-            todosIds1d.push(...linha)
-          }
-          let maiorId = Math.max(...todosIds1d)
+          TodosIds = achatarArray(TodosIds)
+
+          let maiorId = Math.max(...TodosIds)
           state.carregando = false
           return `${(maiorId + 2)}`
         }
@@ -58,7 +74,11 @@ const store = createStore({
       }
 
     },
-    getTodosJogadoresNoTime() { },
+    getTodosJogadores(state) {
+      let arr2Djogadores = state.times.map(({ jogadores }) => jogadores)
+      return achatarArray(arr2Djogadores)
+    },
+
     getJogadoresDisponiveis(state) {
       return function () {
         let jogadoresIndisponiveis = new Set()
@@ -89,11 +109,7 @@ const store = createStore({
     },
     nao_carregando(state) {
       state.carregando = false
-    },
-    jogador_carregado(state, jogadoress) {
-      state.jogadores = jogadoress
-      state.carregando = false
-    },
+    }, 
     jogador_criarnotime(state, [time, jogador]) {
       let indx = state.times.indexOf(time)
       if (indx >= 0) {
@@ -129,31 +145,13 @@ const store = createStore({
 
       state.times[yy].jogadores.splice(xx, 1)
       state.carregando = false
-    },
-    time_carregado(state, times) {
-
-      state.times = times
-      state.carregando = false
-    },
-    time_apagar(state, time) {
-
-      let indx = state.times.indexOf(time)
-      if (indx >= 0) {
-        state.times.splice(indx, 1)
-      }
-      state.carregando = false
-    },
-    time_editar(state, { original, editado }) {
-      Object.assign(original, editado)
-      state.carregando = false
-    },
-    time_criar(state, time) {
-      state.times.push(time)
-      state.carregando = false
-    },
+    }, 
     ente_mutacao_generica(state, [mutacao, entenome, ente]) {
       /* state[entepai].indexOf(ente)
       state[entepai][entenome]  */
+      if (mutacao === 'carregar') {
+        state[entenome] = ente
+      }
       if (mutacao === 'criar') {
         state[entenome].push(ente)
       }
@@ -181,21 +179,27 @@ const store = createStore({
       commit('carregando')
 
       if (this.state.jogadores.length < 2) {
-        axios.get(`${baseUrlApi_jogadores}`).then(({ data }) => {
+        axios.get(`${baseUrlApi.jogadores}`).then(({ data }) => {
           let realData = data;
-          if (baseUrlApi_jogadores.indexOf('json') != -1) {
+          
+          if (baseUrlApi.jogadores.indexOf('json') != -1) {
             realData = data.jogadores
           }
-          commit('jogador_carregado', realData)
+          commit('ente_mutacao_generica',['carregar','jogadores',realData])
         })
       }
       if (this.state.times.length < 2) {
-        axios.get(`${baseUrlApi_times}`).then(({ data }) => {
-          let realData = data;
-          if (baseUrlApi_times.indexOf('json') != -1) {
-            realData = data.times
+        axios.get(`${baseUrlApi.times}`).then(({ data }) => {
+          let timesJson = data;
+          console.log(timesJson[0].jogadores)
+          timesJson.map(({jogadores})=>)
+          if (baseUrlApi.times.indexOf('json') != -1) {
+            timesJson = data.times
           }
-          commit('time_carregado', realData)
+
+
+          commit('ente_mutacao_generica',['carregar','times',timesJson])
+          
         })
       }
       commit('nao_carregando')
@@ -205,7 +209,7 @@ const store = createStore({
       commit('carregando')
       if (useSheetApi) {
         await axios.post(
-          `${baseUrlApi_jogadores}`,
+          `${baseUrlApi.jogadores}`,
           { data: [jogador] }
         )
 
@@ -217,7 +221,7 @@ const store = createStore({
       commit('carregando')
       if (useSheetApi) {
         await axios.put(
-          `${baseUrlApi_times}/id/${original.id}`,
+          `${baseUrlApi.times}/id/${original.id}`,
           { data: [editado] }
         )
 
@@ -228,7 +232,7 @@ const store = createStore({
     async apagarJogador({ commit }, Jogador) {
       commit('carregando')
       if (useSheetApi) {
-        await axios.delete(`${baseUrlApi_jogadores}/id/${Jogador.id}`)
+        await axios.delete(`${baseUrlApi.jogadores}/id/${Jogador.id}`)
 
       }
       commit('jogador_apagarnotime', Jogador)
@@ -238,7 +242,7 @@ const store = createStore({
     async apagarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
-        await axios.delete(`${baseUrlApi_times}/id/${time.id}`)
+        await axios.delete(`${baseUrlApi.times}/id/${time.id}`)
 
       }
       console.log(`tst${baseUrlApi['jogadores']}`)
@@ -247,14 +251,14 @@ const store = createStore({
 
     },
     async acaoDe({ commit }, [acao, entenome, ente]) {
-      
+
 
     },
     async criarTime({ commit }, time) {
       commit('carregando')
       if (useSheetApi) {
         await axios.post(
-          `${baseUrlApi_times}`,
+          `${baseUrlApi.times}`,
           { data: [time] }
         )
 
@@ -266,7 +270,7 @@ const store = createStore({
       commit('carregando')
       if (useSheetApi) {
         await axios.put(
-          `${baseUrlApi_times}/id/${original.id}`,
+          `${baseUrlApi.times}/id/${original.id}`,
           { data: [editado] }
         )
 
