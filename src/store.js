@@ -192,7 +192,7 @@ const store = createStore({
         axios.get(`${baseUrlApi.times}`).then(({ data }) => {
           let timesJson = data;
           console.log(timesJson[0].jogadores)
-          timesJson.map(({jogadores})=>)
+          
           if (baseUrlApi.times.indexOf('json') != -1) {
             timesJson = data.times
           }
