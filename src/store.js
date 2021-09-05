@@ -13,18 +13,18 @@ const achatarArray = (Array2D) => {
   }
   return array1D;
 }
-const ll =() =>{
-  async function transformaJson(timesjson){
-    let timesNoJson=timesjson.data;
+function JSONparseTimeJogadores (timesjson){ 
+    let timesNoJson=timesjson;
        timesNoJson=timesNoJson.map(
-(time)=>{
-    console.log('miau')
-            let listaJogadores = JSON.parse(time.jogadores)
-            time.jogadores=listaJogadores
+(time)=>{ 
+            if(time.jogadores && typeof time.jogadores === 'string' ){
+              let listaJogadores = JSON.parse(time.jogadores)
+              time.jogadores=listaJogadores
+            }
             return time
              }
        )
-}
+        return timesNoJson;
 }
 
 const store = createStore({
@@ -170,6 +170,18 @@ const store = createStore({
 
 
       state.carregando = false
+    },
+    parse_time_jogadoresString(state){
+      let timesStringado = state.times
+      
+      if(state.times && state.times[0].jogadores){
+        let timesConvertidoAleluia = JSONparseTimeJogadores(timesStringado)
+     
+        console.log(timesConvertidoAleluia)
+
+      state.times=timesConvertidoAleluia
+
+      }
     }
 
   },
@@ -177,7 +189,7 @@ const store = createStore({
     async carregar({ commit }) {
 
       commit('carregando')
-
+      //to be deleted
       if (this.state.jogadores.length < 2) {
         axios.get(`${baseUrlApi.jogadores}`).then(({ data }) => {
           let realData = data;
@@ -188,6 +200,7 @@ const store = createStore({
           commit('ente_mutacao_generica',['carregar','jogadores',realData])
         })
       }
+
       if (this.state.times.length < 2) {
         axios.get(`${baseUrlApi.times}`).then(({ data }) => {
           let timesJson = data;
@@ -200,8 +213,10 @@ const store = createStore({
 
           commit('ente_mutacao_generica',['carregar','times',timesJson])
           
+          
         })
       }
+      commit('parse_time_jogadoresString')
       commit('nao_carregando')
 
     },
