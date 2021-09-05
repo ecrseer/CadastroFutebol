@@ -3,8 +3,8 @@
     <div>
       <h2 v-if="entidade">Editar {{ entenome }}</h2>
       <h2 v-else>Criar {{ entenome }}</h2>
-    
-       <section v-if="istimef">
+
+      <section v-if="istimef">
         <Campo nome="nome" v-model="Time.nome"></Campo>
         <CampoDropDown
           nome="estado"
@@ -20,7 +20,7 @@
         ></Campo>
         <CampoText tipo="texto" nome="info" v-model="Time.info"></CampoText>
       </section>
-      <section  v-else>
+      <section v-else>
         <Campo nome="nome" v-model="Jogador.nome"></Campo>
         <Campo nome="salario" v-model="Jogador.salario"></Campo>
         <Campo nome="camisa" tipo="number" v-model="Jogador.camisa"></Campo>
@@ -31,12 +31,16 @@
           :itens="ESTADOS"
         ></CampoDropDown>
       </section>
-      <v-progress-circular  v-if="carregando" indeterminate class="green lighten-5"></v-progress-circular>
-      
+      <v-progress-circular
+        v-if="carregando"
+        indeterminate
+        class="green lighten-5"
+      ></v-progress-circular>
+
       <div v-else>
         <button @click="salvar" id="test_btnsalvar">salvar</button>
         <div v-if="entidade">
-          <button @click="apagar">apagar</button> 
+          <button @click="apagar">apagar</button>
         </div>
       </div>
     </div>
@@ -65,8 +69,7 @@ export default {
     ...mapState(["carregando"]),
     ...mapGetters(["getUltimoEnteId"]),
     incrementaId() {
-      if (this.entenome === "Time")
-       return this.getUltimoEnteId("times");
+      if (this.entenome === "Time") return this.getUltimoEnteId("times");
 
       return this.getUltimoEnteId("jogadores");
     },
@@ -97,19 +100,21 @@ export default {
       this.$bus.emit("FormUnselectJogador");
       this[this.entenome] = this.ente_novin();
     },
-    async salvar() {
-      let payloadEdicao = {
-        original: this.entidade,
-        editado: this[this.entenome],
-      };
-
-      if (this.entidadepai) {
-        if (!this.entidade) {
+    handleSalvarEditarEntidadeInterior(payloadEdicao) {
+       if (!this.entidade) {
           this.$bus.emit("FormAddJogador", this.Jogador);
           this[this.entenome] = this.ente_novin();
         } else {
           this.$bus.emit("FormEditJogador", payloadEdicao);
         }
+    },
+    async salvar() {
+      let payloadEdicao = {
+        original: this.entidade,
+        editado: this[this.entenome],
+      };
+      if (this.entidadepai) { 
+        this.handleSalvarEditarEntidadeInterior(payloadEdicao)
         return;
       }
 
@@ -126,7 +131,7 @@ export default {
         name: "home",
       });
     },
-    async apagar() { 
+    async apagar() {
       await this.$store.dispatch(`apagar${this.entenome}`, this.entidade);
 
       if (this.entenome !== "Jogador") {
@@ -151,11 +156,11 @@ export default {
       this.atualizaEditEntidade();
     },
   },
-  mounted() { 
+  mounted() {
     this.atualizaEditEntidade();
     if (this.entidadepai) {
       this.Time = this.entidadepai;
     }
-  } 
+  },
 };
 </script>

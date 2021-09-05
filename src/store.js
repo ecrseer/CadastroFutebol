@@ -13,18 +13,20 @@ const achatarArray = (Array2D) => {
   }
   return array1D;
 }
-function JSONparseTimeJogadores (timesjson){ 
-    let timesNoJson=timesjson;
-       timesNoJson=timesNoJson.map(
-(time)=>{ 
-            if(time.jogadores && typeof time.jogadores === 'string' ){
-              let listaJogadores = JSON.parse(time.jogadores)
-              time.jogadores=listaJogadores
-            }
-            return time
-             }
-       )
-        return timesNoJson;
+function JSONparseTimeJogadores(timesjson) {
+  let timesNoJson = timesjson;
+
+  timesNoJson = timesNoJson.map(
+    (time) => {
+      if (time.jogadores && typeof time.jogadores === 'string') {
+        let listaJogadores = JSON.parse(time.jogadores)
+        time.jogadores = listaJogadores
+      }
+      return time
+    }
+  )
+  console.log(timesNoJson)
+  return timesNoJson;
 }
 
 const store = createStore({
@@ -53,15 +55,19 @@ const store = createStore({
       return function (entenome) {
         if (entenome === "jogadores") {
           state.carregando = true
-          let TodosIds = state.times.map(({ jogadores }) =>
-            jogadores.map(
-              ({ id }) => id
-            )
-          )
+          let TodosIds = state.times.map((tme) => {
+            if(tme.jogadores){
+              return tme.jogadores.map(
+                ({ id }) => id
+              )
+            } return 0
+
+          }
+          ) 
           if (!TodosIds[0].toString()) {
             TodosIds = [[1]]
           }
-          TodosIds = achatarArray(TodosIds)
+          //TodosIds = achatarArray(TodosIds)
 
           let maiorId = Math.max(...TodosIds)
           state.carregando = false
@@ -109,7 +115,7 @@ const store = createStore({
     },
     nao_carregando(state) {
       state.carregando = false
-    }, 
+    },
     jogador_criarnotime(state, [time, jogador]) {
       let indx = state.times.indexOf(time)
       if (indx >= 0) {
@@ -145,12 +151,16 @@ const store = createStore({
 
       state.times[yy].jogadores.splice(xx, 1)
       state.carregando = false
-    }, 
+    },
     ente_mutacao_generica(state, [mutacao, entenome, ente]) {
       /* state[entepai].indexOf(ente)
       state[entepai][entenome]  */
       if (mutacao === 'carregar') {
         state[entenome] = ente
+
+        if (entenome === 'times') {
+          state.times = JSONparseTimeJogadores(ente)
+        }
       }
       if (mutacao === 'criar') {
         state[entenome].push(ente)
@@ -171,18 +181,6 @@ const store = createStore({
 
       state.carregando = false
     },
-    parse_time_jogadoresString(state){
-      let timesStringado = state.times
-      
-      if(state.times && state.times[0].jogadores){
-        let timesConvertidoAleluia = JSONparseTimeJogadores(timesStringado)
-     
-        console.log(timesConvertidoAleluia)
-
-      state.times=timesConvertidoAleluia
-
-      }
-    }
 
   },
   actions: { // equivalente ao methods de um componente
@@ -193,36 +191,37 @@ const store = createStore({
       if (this.state.jogadores.length < 2) {
         axios.get(`${baseUrlApi.jogadores}`).then(({ data }) => {
           let realData = data;
-          
+
           if (baseUrlApi.jogadores.indexOf('json') != -1) {
             realData = data.jogadores
           }
-          commit('ente_mutacao_generica',['carregar','jogadores',realData])
+          commit('ente_mutacao_generica', ['carregar', 'jogadores', realData])
         })
       }
 
       if (this.state.times.length < 2) {
         axios.get(`${baseUrlApi.times}`).then(({ data }) => {
           let timesJson = data;
-          console.log(timesJson[0].jogadores)
-          
+
           if (baseUrlApi.times.indexOf('json') != -1) {
             timesJson = data.times
           }
 
 
-          commit('ente_mutacao_generica',['carregar','times',timesJson])
-          
-          
-        })
+          commit('ente_mutacao_generica', ['carregar', 'times', timesJson])
+
+
+
+        }).then(
+
+        )
       }
-      commit('parse_time_jogadoresString')
       commit('nao_carregando')
 
     },
     async criarJogador({ commit }, timeEjogador) {
       commit('carregando')
-      if (useSheetApi) {
+      if (false) {
         await axios.post(
           `${baseUrlApi.jogadores}`,
           { data: [jogador] }

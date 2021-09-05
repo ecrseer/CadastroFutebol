@@ -4,7 +4,7 @@ const ESTADOS = [
   'RS',
   'PA'
 ]
-const useSheetApi = true;
+const useSheetApi = false;
  
 const baseUrlApi = {
   times:'https://sheetdb.io/api/v1/isafz2ukd7tkk',

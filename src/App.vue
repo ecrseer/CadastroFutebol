@@ -1,7 +1,7 @@
 
 <template>
   <v-app>
-    <v-main> 
+    <v-main class="bg-green-lighten-5 text-center"> 
      <v-app-bar
       dense
       dark
@@ -13,7 +13,7 @@
       <BotoesRotas/>
       <v-spacer></v-spacer>
      </v-app-bar>
-      <v-container class="ma-1">
+      <v-container class="ma-1 flex-row justify-center ">
         <router-view></router-view>
       </v-container>
       
