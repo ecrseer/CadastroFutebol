@@ -14,7 +14,7 @@
           <span v-if="!Array.isArray(atributo)">{{atributo}}</span>
         </td>
         <td>
-          <button class="colorido" @click="editar(item)">editar</button>
+          <v-btn class="colorido" @click="editar(item)">editar</v-btn>
         </td>
       </tr>
     </tbody>
@@ -60,6 +60,6 @@ export default {
 </script>
 <style scoped>
 .colorido {
-  background-color: #e2aee7;
+  background-color: #b6e7ae;
 }
 </style>

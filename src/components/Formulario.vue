@@ -38,9 +38,9 @@
       ></v-progress-circular>
 
       <div v-else>
-        <button @click="salvar" id="test_btnsalvar">salvar</button>
+        <v-btn @click="salvar" id="test_btnsalvar">salvar</v-btn>
         <div v-if="entidade">
-          <button @click="apagar">apagar</button>
+          <v-btn small color="error" @click="apagar">apagar</v-btn>
         </div>
       </div>
     </div>
@@ -109,6 +109,10 @@ export default {
         }
     },
     async salvar() {
+      let payloadEdicaoGenerico = {
+        original: this.entidade,
+        editado: this[this.entenome],
+      };
       let payloadEdicao = {
         original: this.entidade,
         editado: this[this.entenome],
@@ -127,6 +131,7 @@ export default {
       } else {
         await this.$store.dispatch(`editar${this.entenome}`, payloadEdicao);
       }
+
       this.$router.push({
         name: "home",
       });
