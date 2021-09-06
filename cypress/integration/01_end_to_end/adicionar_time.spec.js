@@ -4,13 +4,13 @@ describe(
     () => {
 
         beforeEach(() => {
-            cy.visit('http://localhost:3000/#/')
+            cy.visit('http://localhost:4000/#/')
         })
 
         it(
             'Deve cadastrar time',
             () => {
-                cy.visit('http://localhost:3000/#/criar-time')
+                cy.visit('http://localhost:4000/#/criar-time')
                 cy.get('[id=nome')
                     .type('TesteTime')
 
@@ -22,14 +22,14 @@ describe(
 
                 cy.get('[id=test_btnsalvar]')
                     .click()
-                cy.visit('http://localhost:3000/#/')
+                cy.visit('http://localhost:4000/#/')
                 cy.get('[id=test_tabela]')
                     .should('contain.text', 'TesteTime')
             }),
             it(
                 'Deve cadastrar jogador',
                 () => {
-                    cy.visit('http://localhost:3000/#/criar-jogador')
+                    cy.visit('http://localhost:4000/#/criar-jogador')
                     cy.get('[id=nome')
                         .type('TesteJogador')
     
@@ -43,7 +43,7 @@ describe(
     
                     cy.get('[id=test_btnsalvar]')
                         .click()
-                    cy.visit('http://localhost:3000/#/lista-jogadores')
+                    cy.visit('http://localhost:4000/#/lista-jogadores')
                     cy.get('[id=test_tabela]')
                         .should('contain.text', 'TesteJogador')
                 })

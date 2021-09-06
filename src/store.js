@@ -24,8 +24,7 @@ function JSONparseTimeJogadores(timesjson) {
       }
       return time
     }
-  )
-  console.log(timesNoJson)
+  ) 
   return timesNoJson;
 }
 
@@ -119,9 +118,11 @@ const store = createStore({
     jogador_criarnotime(state, [time, jogador]) {
       let indx = state.times.indexOf(time)
       if (indx >= 0) {
-        if (!Array.isArray(state.times[indx].jogadores)) {
+        if (!Array.isArray(state.times[indx].jogadores) ||
+        state.times[indx].jogadores.length===0) {
 
-          state.times[indx] = []
+          state.times[indx].jogadores = []
+          
         }
         state.times[indx].jogadores.push(jogador)
       }
@@ -147,10 +148,8 @@ const store = createStore({
         }
 
       }
-
-
-      state.times[yy].jogadores.splice(xx, 1)
-      state.carregando = false
+ 
+      state.times[yy].jogadores.splice(xx, 1) 
     },
     ente_mutacao_generica(state, [mutacao, entenome, ente]) {
       /* state[entepai].indexOf(ente)
@@ -168,6 +167,9 @@ const store = createStore({
       }
       if (mutacao === 'editar') {
         let { original, editado } = ente
+        if(!original){
+          original = state[entenome].filter(ente=>ente.id===editado.id)[0]
+        }
         Object.assign(original, editado)
       }
       if (mutacao === 'apagar') {
@@ -188,29 +190,17 @@ const store = createStore({
     async carregar({ commit }) {
 
       commit('carregando')
-      //to be deleted
-      if (this.state.jogadores.length < 2) {
-        axios.get(`${baseUrlApi.jogadores}`).then(({ data }) => {
-          let realData = data;
-
-          if (baseUrlApi.jogadores.indexOf('json') != -1) {
-            realData = data.jogadores
-          }
-          commit('ente_mutacao_generica', ['carregar', 'jogadores', realData])
-        })
-      }
-
-      if (this.state.times.length < 2) {
-        axios.get(`${baseUrlApi.times}`).then(({ data }) => {
+      
+ 
+       await axios.get(`${baseUrlApi.times}`).then(({ data }) => {
           let timesJson = data;
 
           if (baseUrlApi.times.indexOf('json') != -1) {
             timesJson = data.times
           } 
-             commit('ente_mutacao_generica', ['carregar', 'times', timesJson])
- 
-        }) 
-      }
+          commit('ente_mutacao_generica', ['carregar', 'times', timesJson])
+          
+        })  
       commit('nao_carregando')
 
     },
@@ -232,60 +222,70 @@ const store = createStore({
     },
     async criarTime({ commit }, time) {
       commit('carregando')
+      commit('ente_mutacao_generica', ['criar', 'times', time])
+
       if (useSheetApi) {
         await axios.post(
           `${baseUrlApi.times}`,
           { data: [time] }
-        )
+        ) 
 
       }
-      commit('ente_mutacao_generica', ['criar', 'times', time])
 
     },
-    async editarTime({ commit }, { original, editado }) {
+    async editarTime({ commit,state }, { original, editado }) {
       commit('carregando')
+      commit('ente_mutacao_generica', ['editar', 'times', { original, editado }])
+      editado = state.times.filter(tme=>tme.id===editado.id)[0]
+      
       if (useSheetApi) {
+        let strinTime=editado
+        if(!editado.jogadores || editado.jogadores.length===0){
+          strinTime.jogadores="[]"
+        }
         await axios.put(
-          `${baseUrlApi.times}/id/${original.id}`,
-          { data: [editado] }
+          `${baseUrlApi.times}/id/${editado.id}`,
+          { data: [strinTime] }
         )
 
       }
-      commit('ente_mutacao_generica', ['editar', 'times', { original, editado }])
 
     },
     async criarJogador({ commit }, timeEjogador) {
       commit('carregando')
-      if (false) {
-        await axios.post(
-          `${baseUrlApi.jogadores}`,
-          { data: [jogador] }
+      let [time,jogador] = timeEjogador
+           
+      commit('jogador_criarnotime', timeEjogador) 
+
+      if (useSheetApi) {
+        await axios.put(
+          `${baseUrlApi.times}/id/${time.id}`,
+          { data: [time] }
         )
 
       }
-      console.log(editarTime  )
-      //commit('jogador_criarnotime', timeEjogador)
+
 
     },
     async editarJogador({ commit }, { original, editado }) {
       commit('carregando')
-      if (useSheetApi) {
-        await axios.put(
-          `${baseUrlApi.times}/id/${original.id}`,
-          { data: [editado] }
-        )
-
-      }
       commit('ente_mutacao_generica', ['editar', 'jogadores', { original, editado }])
-
+      
     },
-    async apagarJogador({ commit }, Jogador) {
+    async apagarJogador({ commit }, {time,jogador}) {
       commit('carregando')
+      commit('jogador_apagarnotime', jogador)
+
       if (useSheetApi) {
-        await axios.delete(`${baseUrlApi.jogadores}/id/${Jogador.id}`)
+        let strinTime=time
+        if(!time.jogadores || time.jogadores.length===0){
+          strinTime.jogadores="[]"
+        }
+        await axios.put(`${baseUrlApi.times}/id/${time.id}`,
+        {data:[strinTime]})
 
       }
-      commit('jogador_apagarnotime', Jogador)
+      commit('nao_carregando')
 
 
     },

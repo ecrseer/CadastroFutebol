@@ -85,7 +85,7 @@ export default {
           torcida: "",
           fundacao_ano: "",
           info: "",
-          jogadores: [],
+          jogadores: "[]",
         };
       }
       return {
@@ -105,7 +105,7 @@ export default {
           this.$bus.emit("FormAddJogador", this.Jogador);
           this[this.entenome] = this.ente_novin();
         } else {
-          this.$bus.emit("FormEditJogador", payloadEdicao);
+          this.$bus.emit("FormEditJogador",payloadEdicao);
         }
     },
     async salvar() {
@@ -113,12 +113,9 @@ export default {
         original: this.entidade,
         editado: this[this.entenome],
       };
-      let payloadEdicao = {
-        original: this.entidade,
-        editado: this[this.entenome],
-      };
-      if (this.entidadepai) { 
-        this.handleSalvarEditarEntidadeInterior(payloadEdicao)
+
+      if (this.entidadepai) {  
+        this.handleSalvarEditarEntidadeInterior(payloadEdicaoGenerico)
         return;
       }
 
@@ -129,21 +126,26 @@ export default {
         );
         this[this.entenome] = this.ente_novin();
       } else {
-        await this.$store.dispatch(`editar${this.entenome}`, payloadEdicao);
+        await this.$store.dispatch(`editar${this.entenome}`, payloadEdicaoGenerico);
       }
 
-      this.$router.push({
+      this.$router.replace({
         name: "home",
       });
     },
-    async apagar() {
-      await this.$store.dispatch(`apagar${this.entenome}`, this.entidade);
 
+    async apagar() {
+      
       if (this.entenome !== "Jogador") {
+        await this.$store.dispatch(`apagar${this.entenome}`, this.entidade);
         this.$router.push({
           name: "home",
         });
+        return;
       }
+      this.$bus.emit("FormDeleteJogador");
+
+      
       this.limparEntidade();
     },
 
