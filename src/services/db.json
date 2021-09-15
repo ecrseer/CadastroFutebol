@@ -1,0 +1,19 @@
+{
+  "times": [
+    {"id": 1, "nome": "Chapecoense"},
+    {"id": 2, "nome": "Victoria"}
+  ],
+  "jogadores": [
+    {"id": 11, "time_id":1, "nome": "Jorge"},
+    {"id": 12, "time_id":1, "nome": "Mateus"},
+    {"id": 13, "time_id":2, "nome": "Joao"},
+    {"id": 14, "time_id":2, "nome": "Neydevar"}
+  ],
+  "partidas": [
+    {"id": 1000, "time_casa": 1, "time_visitante": 2 }
+  ],
+  "gols": [
+    {"id": 10000, "partida_id": 1000, "jogador_id": 11 },
+    {"id": 10001, "partida_id": 1000, "jogador_id": 12 }
+  ]
+}

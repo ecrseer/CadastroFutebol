@@ -30,10 +30,10 @@
 import { mapState } from "vuex";
 import BotoesRotas from './components/BotoesRotas.vue';
 import Formulario from "./components/Formulario.vue";
-import Tabela from "./Tabela.vue";
+ 
 
 export default {
-  components: { Tabela, Formulario, BotoesRotas },
+  components: {  Formulario, BotoesRotas },
   data: () => {
     return { rota: "" };
   },
